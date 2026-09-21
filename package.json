@@ -15,7 +15,9 @@
     "@11ty/eleventy": "^2.0.1"
   },
   "dependencies": {
-    "express": "^4.22.3"
+    "express": "^4.22.3",
+    "googleapis": "^181.0.0",
+    "luxon": "^3.7.2"
   },
   "private": true
 }

@@ -228,10 +228,23 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 .geo-light p{margin:0 0 14px;}
 @media(max-width:860px){.geo-light{border-left:none;padding-left:0;border-top:1px solid var(--hair);padding-top:24px;}}
 
-/* calendly */
-.calendly-wrap{margin-top:clamp(30px,4vw,46px);background:var(--paper);border:1px solid var(--hair);}
-.calendly-fallback{padding:24px 26px;font-size:14.5px;color:var(--graph);}
-.calendly-fallback a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;}
+/* booking */
+.booking-wrap{margin-top:clamp(30px,4vw,46px);background:var(--paper);border:1px solid var(--hair);padding:26px;}
+.booking-label{display:block;font-size:13px;color:var(--graph);letter-spacing:.03em;margin:16px 0 6px;}
+.booking-label:first-child{margin-top:0;}
+.booking-optional{color:var(--graph);font-weight:400;}
+.booking-date-input,.booking-input{width:100%;font:inherit;font-size:15px;padding:11px 13px;border:1px solid var(--hair);background:var(--paper);color:var(--ink);}
+.booking-date-input:focus,.booking-input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+textarea.booking-input{resize:vertical;}
+.booking-slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.booking-slot{min-width:88px;text-align:center;}
+.booking-form-wrap{margin-top:4px;}
+.booking-back{background:none;border:none;color:var(--gold);font-size:13.5px;padding:0;cursor:pointer;margin-bottom:14px;}
+.booking-back:hover{text-decoration:underline;}
+.booking-summary{font-size:16px;font-weight:500;letter-spacing:-.008em;margin:0 0 18px;}
+.booking-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+.booking-confirmed{padding:10px 0;}
+.booking-confirmed h3{margin-bottom:8px;}
 
 footer{background:var(--ink);color:#7E848C;border-top:1px solid var(--hair-d);padding:38px 0 56px;font-size:13.5px;}
 .fgrid{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center;}

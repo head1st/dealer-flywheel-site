@@ -16,21 +16,41 @@ permalink: /contact/
   <div class="wrap">
     <div class="ctagrid" style="align-items:start;">
       <div>
-        <div class="calendly-wrap">
-          <!--
-            REPLACE the data-url below with your real Calendly (or Cal.com) scheduling link
-            before this goes live. Format: https://calendly.com/your-handle/20-minute-call
-          -->
-          <div class="calendly-inline-widget" data-url="https://calendly.com/dealerflywheel/20-minute-call" style="min-width:320px;height:700px;"></div>
-          <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-          <noscript>
-            <div class="calendly-fallback">
-              Enable JavaScript to book directly, or email <a href="mailto:hello@dealerflywheel.com">hello@dealerflywheel.com</a>.
-            </div>
-          </noscript>
+        <div id="booking" class="booking-wrap">
+          <div class="booking-date-row">
+            <label class="booking-label" for="booking-date">Pick a date</label>
+            <input type="date" id="booking-date" class="booking-date-input">
+          </div>
+          <div id="booking-slots" class="booking-slots">
+            <p class="disclaim">Choose a date to see open times.</p>
+          </div>
+          <div id="booking-form-wrap" class="booking-form-wrap" hidden>
+            <button type="button" id="booking-back" class="booking-back">&larr; Choose a different time</button>
+            <p class="booking-summary" id="booking-summary"></p>
+            <form id="booking-form" class="booking-form">
+              <input type="hidden" id="booking-date-hidden" name="bookingDate">
+              <input type="hidden" id="booking-time" name="bookingTime">
+              <!-- honeypot, hidden from real visitors -->
+              <div class="booking-hp" aria-hidden="true">
+                <label for="booking-company">Company</label>
+                <input type="text" id="booking-company" name="company" tabindex="-1" autocomplete="off">
+              </div>
+              <label class="booking-label" for="booking-name">Name</label>
+              <input class="booking-input" type="text" id="booking-name" name="name" required>
+              <label class="booking-label" for="booking-email">Email</label>
+              <input class="booking-input" type="email" id="booking-email" name="email" required>
+              <label class="booking-label" for="booking-phone">Phone <span class="booking-optional">(optional)</span></label>
+              <input class="booking-input" type="tel" id="booking-phone" name="phone">
+              <label class="booking-label" for="booking-notes">What's happening with a lead right now? <span class="booking-optional">(optional)</span></label>
+              <textarea class="booking-input" id="booking-notes" name="notes" rows="3"></textarea>
+              <button type="submit" class="btn ink" style="margin-top:16px;">Confirm the call</button>
+              <p id="booking-status" class="disclaim" style="margin-top:10px;"></p>
+            </form>
+          </div>
         </div>
         <p class="disclaim" style="margin-top:16px;">Prefer email? Write to <a href="mailto:hello@dealerflywheel.com" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">hello@dealerflywheel.com</a>.</p>
       </div>
+      <script src="/js/booking.js" defer></script>
       <div class="geo-light">
         <b>Where we work</b>
         <p>Nassau and Suffolk Counties first, on purpose. We'd rather be in your store than on a video call.</p>

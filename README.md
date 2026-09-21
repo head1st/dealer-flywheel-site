@@ -18,9 +18,10 @@ npm start            # serves _site/ with a tiny Express server on $PORT
 
 ## Before this goes live
 
-1. **Calendly link.** `src/contact.njk` has a placeholder Calendly URL
-   (`https://calendly.com/dealerflywheel/20-minute-call`). Create a real
-   Calendly (or Cal.com) account and swap in the real `data-url`.
+1. **Booking setup.** The Contact page books directly onto your own Google
+   Calendar — no Calendly, no Cal.com, no third-party branding. See
+   **"Booking setup"** below; without it, the booking widget shows a plain
+   "email us" message instead of erroring.
 2. **Inbox.** Confirm `hello@dealerflywheel.com` is a real, monitored
    address (used in the contact-page fallback link).
 3. **OG image.** `src/assets/og-image.png` is a placeholder social-share
@@ -29,6 +30,65 @@ npm start            # serves _site/ with a tiny Express server on $PORT
 4. **Canonical URL / sitemap.** Both assume the domain `dealerflywheel.com`
    (see `src/_includes/layout.njk` and `src/sitemap.njk`). Update if the
    domain differs.
+
+## Booking setup (Google Calendar, no third party, free)
+
+The Contact page's booking widget (`src/js/booking.js`, API in
+`server.js` / `lib/`) reads real free/busy times from a Google Calendar
+you own and creates the event directly — nobody else's branding, no
+subscription. It needs a **service account**: a robot Google account your
+server authenticates as, with access to just your calendar.
+
+1. **Create a Google Cloud project.** Go to
+   [console.cloud.google.com](https://console.cloud.google.com), create a
+   new project (any name, e.g. "Dealer Flywheel"). It's free — no billing
+   account is required for this.
+2. **Enable the Calendar API.** In that project, go to "APIs & Services" →
+   "Library", search "Google Calendar API", click it, click **Enable**.
+3. **Create a service account.** "APIs & Services" → "Credentials" →
+   **Create Credentials** → **Service account**. Give it any name (e.g.
+   "dealer-flywheel-booking"). You don't need to grant it any project-level
+   role — skip that step.
+4. **Create a key for it.** Open the service account you just made → **Keys**
+   tab → **Add Key** → **Create new key** → **JSON**. This downloads a
+   `.json` file — keep it private, it's a credential.
+5. **Share your calendar with it.** Open the JSON file and copy the
+   `client_email` value (looks like
+   `dealer-flywheel-booking@your-project.iam.gserviceaccount.com`). Go to
+   [calendar.google.com](https://calendar.google.com) → the calendar you
+   want bookings to land on → Settings → **Share with specific people** →
+   add that email address → permission: **Make changes to events**.
+6. **Get that calendar's ID.** Same Settings page → **Integrate calendar**
+   → copy the **Calendar ID** (usually just your Gmail address for your
+   primary calendar, or a long `...@group.calendar.google.com` string for
+   a secondary one).
+7. **Set these on Railway** (Project → your service → Variables):
+
+   | Variable | Value |
+   |---|---|
+   | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | the `client_email` from the JSON |
+   | `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | the `private_key` from the JSON, **as one line** — keep the `\n` sequences exactly as they appear in the JSON file, don't convert them to real line breaks |
+   | `GOOGLE_CALENDAR_ID` | the calendar ID from step 6 |
+
+   Optional, all have sensible defaults:
+
+   | Variable | Default | Meaning |
+   |---|---|---|
+   | `BUSINESS_TIMEZONE` | `America/New_York` | |
+   | `BUSINESS_START_HOUR` | `9` | 24h, first bookable slot |
+   | `BUSINESS_END_HOUR` | `17` | 24h, last slot ends by this time |
+   | `SLOT_MINUTES` | `20` | length of each bookable slot |
+   | `BOOKING_LEAD_MINUTES` | `60` | minimum notice for a same-day booking |
+   | `BOOKING_WINDOW_DAYS` | `14` | how far ahead people can book |
+
+8. Railway redeploys automatically when you save variables. Once it's up,
+   `/contact/` will show real open slots and confirmed bookings will show
+   up on your calendar with the customer added as a guest — Google sends
+   the confirmation email itself.
+
+No credentials set → the widget still renders, but shows a plain message
+pointing people to email `hello@dealerflywheel.com` instead. Nothing
+breaks either way.
 
 ## Deploying to Railway
 
