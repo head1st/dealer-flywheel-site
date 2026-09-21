@@ -18,7 +18,7 @@
     "express": "^4.22.3",
     "googleapis": "^181.0.0",
     "luxon": "^3.7.2",
-    "nodemailer": "^10.0.10"
+    "resend": "^6.28.1"
   },
   "private": true
 }

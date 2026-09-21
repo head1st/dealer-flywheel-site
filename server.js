@@ -138,20 +138,22 @@ app.post("/api/book", async (req, res) => {
       notes: typeof notes === "string" ? notes.trim() : "",
     });
 
-    // Best-effort: the booking itself already succeeded (it's on the
-    // calendar), so an email hiccup shouldn't turn into a 502 for the visitor.
-    try {
-      await emailer.sendConfirmation({
+    // Respond as soon as the calendar booking itself succeeds — don't make
+    // the visitor's browser wait on an email send. Fire it in the
+    // background instead; a slow or failed email should never look like a
+    // failed booking.
+    res.json({ success: true });
+
+    emailer
+      .sendConfirmation({
         to: email.trim(),
         name: name.trim(),
         dateLabel: start.toFormat("cccc, LLLL d"),
         timeLabel: start.toFormat("h:mm a"),
+      })
+      .catch((emailErr) => {
+        console.error("confirmation email failed:", emailErr);
       });
-    } catch (emailErr) {
-      console.error("confirmation email failed:", emailErr);
-    }
-
-    res.json({ success: true });
   } catch (err) {
     console.error("booking failed:", err);
     res.status(502).json({ error: "Couldn't reach the calendar. Try again shortly." });

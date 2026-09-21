@@ -69,25 +69,34 @@ server authenticates as, with access to just your calendar.
    | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | the `client_email` from the JSON |
    | `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | the `private_key` from the JSON, **as one line** — keep the `\n` sequences exactly as they appear in the JSON file, don't convert them to real line breaks |
    | `GOOGLE_CALENDAR_ID` | the calendar ID from step 6 |
-   | `GMAIL_USER` | your Gmail address, e.g. `you@gmail.com` |
-   | `GMAIL_APP_PASSWORD` | a Gmail **app password** — see below |
+   | `RESEND_API_KEY` | API key from resend.com — see below |
+   | `EMAIL_FROM` | the address confirmations are sent from, e.g. `Dealer Flywheel <hello@dealerflywheel.com>` |
+   | `NOTIFY_EMAIL` | *(optional)* where the new-booking notice goes; defaults to `EMAIL_FROM`'s address |
 
    A plain service account can create the calendar event, but it can't
-   invite an outside guest (Google blocks that without paid Google
-   Workspace + admin-level "domain-wide delegation"). So the confirmation
-   email is sent separately, over your own Gmail:
+   invite an outside guest (that needs paid Google Workspace + admin-level
+   "domain-wide delegation"), so the confirmation email is sent
+   separately. It's sent via **Resend** rather than Gmail's SMTP servers,
+   because Railway (like most PaaS hosts) blocks outbound SMTP ports by
+   default — Resend's API runs over plain HTTPS instead, so it isn't
+   affected by that:
 
-   1. Turn on **2-Step Verification** on your Google account, if it isn't
-      already (myaccount.google.com/security) — app passwords require it.
-   2. Go to **myaccount.google.com/apppasswords**, create one (name it
-      anything, e.g. "Dealer Flywheel site"), and copy the 16-character
-      password it gives you.
-   3. Set `GMAIL_USER` to that Google account's address and
-      `GMAIL_APP_PASSWORD` to the 16-character password (spaces don't
-      matter either way).
+   1. Sign up free at **resend.com** (3,000 emails/month free, no card
+      required).
+   2. **Verify your domain**: Resend dashboard → Domains → Add Domain →
+      `dealerflywheel.com`. It gives you 2–3 DNS records (SPF, DKIM, and
+      sometimes a tracking CNAME) to add wherever `dealerflywheel.com`'s
+      DNS is managed. Verification usually completes within a few
+      minutes of adding them.
+   3. Once verified, create an **API key** (dashboard → API Keys → Create)
+      and set it as `RESEND_API_KEY`.
+   4. Set `EMAIL_FROM` to an address at your verified domain, e.g.
+      `Dealer Flywheel <hello@dealerflywheel.com>` — it doesn't need to be
+      a real inbox for sending to work, though it's worth making it a real
+      one eventually since customers can reply to it.
 
-   Without these two set, bookings still work — they land on the
-   calendar — there's just no confirmation email sent.
+   Without these set, bookings still work — they land on the calendar —
+   there's just no confirmation email sent.
 
    Optional, all have sensible defaults:
 
