@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>{{ title }} — Dealer Flywheel</title>
+<meta name="description" content="{{ description }}">
+<link rel="canonical" href="https://dealerflywheel.com{{ page.url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dealer Flywheel">
+<meta property="og:title" content="{{ title }} — Dealer Flywheel">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="https://dealerflywheel.com{{ page.url }}">
+<meta property="og:image" content="https://dealerflywheel.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="navin">
+    <a class="brand" href="/">
+      {% include "mark.njk" %}
+      <span class="wm"><span>DEALER</span> <b>FLYWHEEL</b></span>
+    </a>
+    <nav class="navlinks">
+      <a href="/" {% if page.url == "/" %}class="active"{% endif %}>Home</a>
+      <a href="/method/" {% if page.url == "/method/" %}class="active"{% endif %}>Method</a>
+      <a href="/work/" {% if page.url == "/work/" %}class="active"{% endif %}>What we build</a>
+      <a href="/pricing/" {% if page.url == "/pricing/" %}class="active"{% endif %}>Pricing</a>
+      <a href="/security/" {% if page.url == "/security/" %}class="active"{% endif %}>Security</a>
+    </nav>
+    <a class="btn" href="/contact/">Book an assessment</a>
+  </div>
+</header>
+
+<main id="top">
+{{ content | safe }}
+</main>
+
+<footer>
+  <div class="wrap fgrid">
+    <a class="brand" href="/">
+      {% include "mark.njk" %}
+      <span class="wm"><span>DEALER</span> <b>FLYWHEEL</b></span>
+    </a>
+    <nav class="flinks">
+      <a href="/method/">Method</a>
+      <a href="/work/">What we build</a>
+      <a href="/pricing/">Pricing</a>
+      <a href="/security/">Security</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div>Automotive technology and AI implementation. Nassau and Suffolk Counties, New York.</div>
+  </div>
+</footer>
+
+</body>
+</html>
