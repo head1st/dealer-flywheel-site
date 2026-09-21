@@ -69,6 +69,25 @@ server authenticates as, with access to just your calendar.
    | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | the `client_email` from the JSON |
    | `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | the `private_key` from the JSON, **as one line** — keep the `\n` sequences exactly as they appear in the JSON file, don't convert them to real line breaks |
    | `GOOGLE_CALENDAR_ID` | the calendar ID from step 6 |
+   | `GMAIL_USER` | your Gmail address, e.g. `you@gmail.com` |
+   | `GMAIL_APP_PASSWORD` | a Gmail **app password** — see below |
+
+   A plain service account can create the calendar event, but it can't
+   invite an outside guest (Google blocks that without paid Google
+   Workspace + admin-level "domain-wide delegation"). So the confirmation
+   email is sent separately, over your own Gmail:
+
+   1. Turn on **2-Step Verification** on your Google account, if it isn't
+      already (myaccount.google.com/security) — app passwords require it.
+   2. Go to **myaccount.google.com/apppasswords**, create one (name it
+      anything, e.g. "Dealer Flywheel site"), and copy the 16-character
+      password it gives you.
+   3. Set `GMAIL_USER` to that Google account's address and
+      `GMAIL_APP_PASSWORD` to the 16-character password (spaces don't
+      matter either way).
+
+   Without these two set, bookings still work — they land on the
+   calendar — there's just no confirmation email sent.
 
    Optional, all have sensible defaults:
 
@@ -82,9 +101,9 @@ server authenticates as, with access to just your calendar.
    | `BOOKING_WINDOW_DAYS` | `14` | how far ahead people can book |
 
 8. Railway redeploys automatically when you save variables. Once it's up,
-   `/contact/` will show real open slots and confirmed bookings will show
-   up on your calendar with the customer added as a guest — Google sends
-   the confirmation email itself.
+   `/contact/` will show real open slots, confirmed bookings will show up
+   on your calendar, and (once the Gmail step above is also done) both you
+   and the customer get a confirmation email.
 
 No credentials set → the widget still renders, but shows a plain message
 pointing people to email `hello@dealerflywheel.com` instead. Nothing

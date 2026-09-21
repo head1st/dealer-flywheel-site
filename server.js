@@ -5,6 +5,7 @@ const express = require("express");
 const { DateTime } = require("luxon");
 const { getAvailableSlots } = require("./lib/slots");
 const googleCalendar = require("./lib/googleCalendar");
+const emailer = require("./lib/email");
 
 const app = express();
 const DIST = path.join(__dirname, "_site");
@@ -137,6 +138,19 @@ app.post("/api/book", async (req, res) => {
       notes: typeof notes === "string" ? notes.trim() : "",
     });
 
+    // Best-effort: the booking itself already succeeded (it's on the
+    // calendar), so an email hiccup shouldn't turn into a 502 for the visitor.
+    try {
+      await emailer.sendConfirmation({
+        to: email.trim(),
+        name: name.trim(),
+        dateLabel: start.toFormat("cccc, LLLL d"),
+        timeLabel: start.toFormat("h:mm a"),
+      });
+    } catch (emailErr) {
+      console.error("confirmation email failed:", emailErr);
+    }
+
     res.json({ success: true });
   } catch (err) {
     console.error("booking failed:", err);
@@ -156,5 +170,10 @@ app.listen(port, "0.0.0.0", () => {
     googleCalendar.isConfigured()
       ? "Booking: Google Calendar configured."
       : "Booking: Google Calendar NOT configured — /api endpoints will return 503."
+  );
+  console.log(
+    emailer.isConfigured()
+      ? "Confirmation email: Gmail SMTP configured."
+      : "Confirmation email: NOT configured — bookings will still succeed, just without a confirmation email."
   );
 });
