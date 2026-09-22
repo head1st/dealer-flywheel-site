@@ -175,7 +175,7 @@ app.listen(port, "0.0.0.0", () => {
   );
   console.log(
     emailer.isConfigured()
-      ? "Confirmation email: Gmail SMTP configured."
+      ? "Confirmation email: Resend configured."
       : "Confirmation email: NOT configured — bookings will still succeed, just without a confirmation email."
   );
 });
