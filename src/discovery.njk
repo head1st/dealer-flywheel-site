@@ -1,0 +1,104 @@
+---
+layout: layout.njk
+title: "Discovery Worksheet"
+description: "The Map step of the Dealer Flywheel Method — ten minutes, in your own words, before we design anything."
+permalink: /discovery/
+---
+<div class="pagehead">
+  <div class="wrap">
+    <p class="kicker">01 — MAP</p>
+    <h1 style="font-size:clamp(30px,5vw,50px);">Tell us how your store actually works.</h1>
+    <p class="sub">Every decision-maker in your store sees this differently, and that's useful — please fill this out yourself rather than as one group answer. Ten minutes, in your own words. Skip anything that doesn't apply.</p>
+  </div>
+</div>
+
+<section id="discovery">
+  <div class="wrap">
+    <div class="disc-wrap">
+      <form id="disc-form" class="disc-form">
+        <!-- honeypot, hidden from real visitors -->
+        <div class="booking-hp" aria-hidden="true">
+          <label for="disc-company">Company</label>
+          <input type="text" id="disc-company" name="company" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="disc-block">
+          <p class="disc-kicker">About you</p>
+          <label class="booking-label" for="disc-business">Business name</label>
+          <input class="booking-input" type="text" id="disc-business" name="business" required>
+
+          <label class="booking-label" for="disc-name">Your name</label>
+          <input class="booking-input" type="text" id="disc-name" name="respondentName" required>
+
+          <label class="booking-label" for="disc-role">Your role</label>
+          <input class="booking-input" type="text" id="disc-role" name="role" placeholder="e.g. Owner, GM, Sales" required>
+
+          <label class="booking-label" for="disc-email">Your email <span class="booking-optional">(optional — in case we have a follow-up question)</span></label>
+          <input class="booking-input" type="email" id="disc-email" name="email">
+        </div>
+
+        <div class="disc-block">
+          <p class="disc-kicker">Priorities &amp; dealbreakers</p>
+
+          <label class="booking-label" for="q-matters">In a sentence or two, what do you think matters most to your customers when they're deciding on a vehicle?</label>
+          <textarea class="booking-input" id="q-matters" name="q_matters" rows="2" required></textarea>
+
+          <label class="booking-label" for="q-keep">What's the one thing your current website does well that we should not lose?</label>
+          <textarea class="booking-input" id="q-keep" name="q_keep" rows="2"></textarea>
+
+          <label class="booking-label" for="q-frustrate">What frustrates you most about your current website?</label>
+          <textarea class="booking-input" id="q-frustrate" name="q_frustrate" rows="2"></textarea>
+
+          <p class="booking-label" style="margin-top:22px;">Rate each of these for your site</p>
+          <div class="pri-table" id="pri-table">
+            <div class="pri-hd"><div></div><div>Must have</div><div>Nice to have</div><div>Skip it</div></div>
+            <!-- rows injected by disc.js from PRI_ITEMS -->
+          </div>
+
+          <label class="booking-label" for="q-dealbreaker">Anything the site must NOT do or say — a real dealbreaker? <span class="booking-optional">(optional)</span></label>
+          <textarea class="booking-input" id="q-dealbreaker" name="q_dealbreaker" rows="2"></textarea>
+        </div>
+
+        <div class="disc-block">
+          <p class="disc-kicker">Brand &amp; voice</p>
+
+          <label class="booking-label" for="q-onesentence">Finish this sentence: when someone lands on our website, we want them to think &mdash;</label>
+          <input class="booking-input" type="text" id="q-onesentence" name="q_onesentence">
+
+          <p class="booking-label" style="margin-top:22px;">Should the site feel...</p>
+          <div class="radio-row" id="voice-radio">
+            <label><input type="radio" name="q_voice" value="Personal — like talking to one specific person on the team" required> Personal, like one specific person</label>
+            <label><input type="radio" name="q_voice" value="Institutional — representing the whole business"> Institutional, the whole business</label>
+            <label><input type="radio" name="q_voice" value="Somewhere in between"> Somewhere in between</label>
+          </div>
+
+          <label class="booking-label" for="q-refs" style="margin-top:18px;">Any websites — yours or a competitor's — you specifically like, or specifically don't want to resemble? <span class="booking-optional">(optional)</span></label>
+          <textarea class="booking-input" id="q-refs" name="q_refs" rows="2"></textarea>
+
+          <label class="booking-label" for="q-offlimits">Anything about your current logo, colors or name that's off-limits to change? <span class="booking-optional">(optional)</span></label>
+          <textarea class="booking-input" id="q-offlimits" name="q_offlimits" rows="2"></textarea>
+        </div>
+
+        <div class="disc-block">
+          <p class="disc-kicker">What you actually sell</p>
+
+          <label class="booking-label" for="q-makes">List the makes/brands you sell or broker most often, roughly in order</label>
+          <textarea class="booking-input" id="q-makes" name="q_makes" rows="2" required></textarea>
+
+          <p class="booking-label" style="margin-top:22px;">Which of these do your customers ask about most? Check all that apply</p>
+          <div class="chk-grid" id="cat-checks">
+            <!-- checkboxes injected by disc.js from CATEGORY_ITEMS -->
+          </div>
+
+          <label class="booking-label" for="q-gap" style="margin-top:18px;">Anything your customers regularly ask for that most car-shopping sites never seem to account for? <span class="booking-optional">(optional)</span></label>
+          <textarea class="booking-input" id="q-gap" name="q_gap" rows="2"></textarea>
+        </div>
+
+        <button type="submit" class="btn ink" style="margin-top:8px;">Send to Dealer Flywheel</button>
+        <p id="disc-status" class="disclaim" style="margin-top:10px;"></p>
+      </form>
+    </div>
+    <p class="disclaim" style="margin-top:16px;">Prefer to talk it through instead? Email <a href="mailto:hello@dealerflywheel.com" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">hello@dealerflywheel.com</a> or <a href="/contact/" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px;">book twenty minutes</a>.</p>
+  </div>
+</section>
+<script src="/js/disc.js" defer></script>

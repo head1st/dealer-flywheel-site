@@ -252,3 +252,31 @@ footer .brand svg path{fill:#7E848C;}
 footer .brand .wm{color:#7E848C;}
 .flinks{display:flex;gap:22px;font-size:13.5px;}
 .flinks a:hover{color:var(--bone);}
+
+/* discovery worksheet */
+.disc-wrap{margin-top:clamp(30px,4vw,46px);background:var(--paper);border:1px solid var(--hair);padding:26px;}
+.disc-block{padding:22px 0;border-top:1px solid var(--hair);}
+.disc-block:first-child{padding-top:0;border-top:none;}
+.disc-kicker{font-size:13px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin:0 0 16px;}
+.disc-form .booking-label{margin-top:20px;}
+.disc-form .booking-label:first-of-type{margin-top:0;}
+.pri-table{margin-top:14px;border:1px solid var(--hair);}
+.pri-hd,.pri-row{display:grid;grid-template-columns:1fr 90px 100px 80px;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--hair);}
+.pri-hd{border-top:none;background:var(--bone);font-size:12px;color:var(--graph);letter-spacing:.03em;}
+.pri-hd div:not(:first-child),.pri-row div:not(:first-child){text-align:center;}
+.pri-label{font-size:14.5px;line-height:1.4;}
+@media(max-width:620px){
+  .pri-hd{display:none;}
+  .pri-row{grid-template-columns:1fr;gap:4px;padding:14px;}
+  .pri-row > div:not(.pri-label){display:flex;align-items:center;gap:8px;justify-content:flex-start;text-align:left;}
+  .pri-row > div:not(.pri-label)::before{font-size:12px;color:var(--graph);}
+  .pri-row > div:nth-child(2)::before{content:"Must have";}
+  .pri-row > div:nth-child(3)::before{content:"Nice to have";}
+  .pri-row > div:nth-child(4)::before{content:"Skip it";}
+}
+.radio-row{display:flex;flex-direction:column;gap:10px;margin-top:10px;font-size:14.5px;}
+.radio-row label{display:flex;align-items:baseline;gap:9px;cursor:pointer;}
+.chk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 16px;margin-top:12px;font-size:14.5px;}
+@media(max-width:700px){.chk-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:460px){.chk-grid{grid-template-columns:1fr;}}
+.chk-item{display:flex;align-items:baseline;gap:8px;cursor:pointer;}

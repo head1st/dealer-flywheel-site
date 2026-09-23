@@ -160,6 +160,81 @@ app.post("/api/book", async (req, res) => {
   }
 });
 
+const PRIORITY_VALUES = new Set(["Must have", "Nice to have", "Skip it"]);
+const MAX_TEXT = 4000; // generous ceiling per field — guards against a pasted essay/attack, not normal answers
+
+function cleanText(v, max = MAX_TEXT) {
+  if (typeof v !== "string") return "";
+  return v.trim().slice(0, max);
+}
+
+app.post("/api/discovery", async (req, res) => {
+  const body = req.body || {};
+
+  // Honeypot: a real visitor never fills the hidden "company" field.
+  if (cleanText(body.company)) {
+    return res.json({ success: true });
+  }
+
+  const business = cleanText(body.business, 200);
+  const respondentName = cleanText(body.respondentName, 200);
+  const role = cleanText(body.role, 200);
+  const email = cleanText(body.email, 254);
+
+  if (!business) return res.status(400).json({ error: "Business name is required." });
+  if (!respondentName) return res.status(400).json({ error: "Your name is required." });
+  if (!role) return res.status(400).json({ error: "Your role is required." });
+  if (email && !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: "That email doesn't look right." });
+  }
+
+  const priorities = {};
+  if (body.priorities && typeof body.priorities === "object") {
+    for (const [label, val] of Object.entries(body.priorities)) {
+      if (typeof label !== "string") continue;
+      const cleanLabel = label.slice(0, 200);
+      const cleanVal = typeof val === "string" && PRIORITY_VALUES.has(val) ? val : null;
+      priorities[cleanLabel] = cleanVal;
+    }
+  }
+
+  const categories = Array.isArray(body.categories)
+    ? body.categories.filter((c) => typeof c === "string").map((c) => c.slice(0, 60)).slice(0, 30)
+    : [];
+
+  const answers = {
+    business,
+    respondentName,
+    role,
+    email,
+    q_matters: cleanText(body.q_matters),
+    q_keep: cleanText(body.q_keep),
+    q_frustrate: cleanText(body.q_frustrate),
+    priorities,
+    q_dealbreaker: cleanText(body.q_dealbreaker),
+    q_onesentence: cleanText(body.q_onesentence),
+    q_voice: cleanText(body.q_voice, 200),
+    q_refs: cleanText(body.q_refs),
+    q_offlimits: cleanText(body.q_offlimits),
+    q_makes: cleanText(body.q_makes),
+    categories,
+    q_gap: cleanText(body.q_gap),
+  };
+
+  try {
+    await emailer.sendDiscoverySubmission(answers);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("discovery submission email failed:", err);
+    // The person's answers are real and shouldn't vanish just because email
+    // delivery hiccuped — log the full payload server-side so it's recoverable.
+    console.error("discovery submission payload:", JSON.stringify(answers));
+    res.status(502).json({
+      error: "Your answers didn't send — please try again, or email hello@dealerflywheel.com.",
+    });
+  }
+});
+
 // 404s: serve a plain fallback rather than Express's default HTML.
 app.use((req, res) => {
   res.status(404).sendFile(path.join(DIST, "index.html"));
