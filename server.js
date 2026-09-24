@@ -9,9 +9,35 @@ const emailer = require("./lib/email");
 const crypto = require("crypto");
 const { decodeVin, VinDecodeError } = require("./lib/vinDecode");
 const { buildAdf, AdfValidationError } = require("./lib/adf");
+const { createTtlCache } = require("./lib/ttlCache");
+const { rateLimit } = require("express-rate-limit");
 
 const app = express();
 const DIST = path.join(__dirname, "_site");
+
+// Railway puts one proxy in front of the app. Without this, every request
+// looks like it comes from Railway's IP and all visitors share one rate-limit
+// bucket. With it, Express reads the real visitor IP from X-Forwarded-For.
+app.set("trust proxy", 1);
+
+// Per-IP rate limits, sized to what each endpoint costs us. In-memory, which
+// is fine for a single Railway instance (resets on deploy).
+function limiter(windowMs, limit, error) {
+  return rateLimit({
+    windowMs,
+    limit,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
+    message: { error },
+  });
+}
+const vinLimiter = limiter(60 * 1000, 30, "Too many VIN lookups — try again in a minute.");
+const availabilityLimiter = limiter(60 * 1000, 60, "Too many requests — try again in a minute.");
+// Each successful submit sends an email via Resend; a real person needs 1–2.
+const formLimiter = limiter(60 * 60 * 1000, 10, "Too many submissions — try again later, or email hello@dealerflywheel.com.");
+
+// Successful VIN decodes, cached: a VIN's specs never change.
+const vinCache = createTtlCache({ maxEntries: 1000, ttlMs: 24 * 60 * 60 * 1000 });
 
 const CONFIG = {
   timezone: process.env.BUSINESS_TIMEZONE || "America/New_York",
@@ -47,7 +73,7 @@ async function fetchBusyForDate(date) {
   return googleCalendar.getBusyPeriods(dayStart.toISO(), dayEnd.toISO());
 }
 
-app.get("/api/availability", async (req, res) => {
+app.get("/api/availability", availabilityLimiter, async (req, res) => {
   const { date } = req.query;
   if (typeof date !== "string" || !DATE_RE.test(date)) {
     return res.status(400).json({ error: "Pass a date as YYYY-MM-DD." });
@@ -79,7 +105,7 @@ app.get("/api/availability", async (req, res) => {
   }
 });
 
-app.post("/api/book", async (req, res) => {
+app.post("/api/book", formLimiter, async (req, res) => {
   const { date, time, name, email, phone, notes, company } = req.body || {};
 
   // Honeypot: a real visitor never fills the hidden "company" field.
@@ -171,7 +197,7 @@ function cleanText(v, max = MAX_TEXT) {
   return v.trim().slice(0, max);
 }
 
-app.post("/api/discovery", async (req, res) => {
+app.post("/api/discovery", formLimiter, async (req, res) => {
   const body = req.body || {};
 
   // Honeypot: a real visitor never fills the hidden "company" field.
@@ -240,9 +266,14 @@ app.post("/api/discovery", async (req, res) => {
 
 // VIN decode via NHTSA vPIC (free, no key). For VINs a dealer already has —
 // feed, trade-in, window sticker — not market-wide inventory discovery.
-app.get("/api/vin/:vin", async (req, res) => {
+app.get("/api/vin/:vin", vinLimiter, async (req, res) => {
   try {
-    const result = await decodeVin(req.params.vin);
+    const key = String(req.params.vin).trim().toUpperCase();
+    let result = vinCache.get(key);
+    if (!result) {
+      result = await decodeVin(key);
+      vinCache.set(key, result);
+    }
     res.set("Cache-Control", "public, max-age=86400"); // a VIN's specs don't change
     res.json(result);
   } catch (err) {

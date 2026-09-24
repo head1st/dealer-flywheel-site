@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "express": "^4.22.3",
+    "express-rate-limit": "^8.7.0",
     "googleapis": "^181.0.0",
     "luxon": "^3.7.2",
     "resend": "^6.28.1"
