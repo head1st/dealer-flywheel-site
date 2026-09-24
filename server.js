@@ -6,6 +6,9 @@ const { DateTime } = require("luxon");
 const { getAvailableSlots } = require("./lib/slots");
 const googleCalendar = require("./lib/googleCalendar");
 const emailer = require("./lib/email");
+const crypto = require("crypto");
+const { decodeVin, VinDecodeError } = require("./lib/vinDecode");
+const { buildAdf, AdfValidationError } = require("./lib/adf");
 
 const app = express();
 const DIST = path.join(__dirname, "_site");
@@ -232,6 +235,52 @@ app.post("/api/discovery", async (req, res) => {
     res.status(502).json({
       error: "Your answers didn't send — please try again, or email hello@dealerflywheel.com.",
     });
+  }
+});
+
+// VIN decode via NHTSA vPIC (free, no key). For VINs a dealer already has —
+// feed, trade-in, window sticker — not market-wide inventory discovery.
+app.get("/api/vin/:vin", async (req, res) => {
+  try {
+    const result = await decodeVin(req.params.vin);
+    res.set("Cache-Control", "public, max-age=86400"); // a VIN's specs don't change
+    res.json(result);
+  } catch (err) {
+    if (err instanceof VinDecodeError) {
+      return res.status(err.status).json({ error: err.message });
+    }
+    console.error("vin decode failed:", err);
+    res.status(500).json({ error: "VIN decode failed." });
+  }
+});
+
+// ADF 1.0 lead builder — proof point for the planned dealer lead-workflow
+// demo. Nothing on the site calls this yet, so it's gated behind an API key:
+// 503 if LEAD_DEMO_API_KEY is unset, 401 on a missing/wrong x-api-key.
+function requireLeadDemoKey(req, res, next) {
+  const expected = process.env.LEAD_DEMO_API_KEY;
+  if (!expected) {
+    return res.status(503).json({ error: "Lead demo API is not enabled." });
+  }
+  const given = req.get("x-api-key");
+  const a = Buffer.from(String(given || ""));
+  const b = Buffer.from(expected);
+  if (!given || a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    return res.status(401).json({ error: "Missing or invalid API key." });
+  }
+  next();
+}
+
+app.post("/api/lead-demo/adf", requireLeadDemoKey, (req, res) => {
+  try {
+    const xml = buildAdf(req.body || {});
+    res.type("application/xml").send(xml);
+  } catch (err) {
+    if (err instanceof AdfValidationError) {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error("adf build failed:", err);
+    res.status(500).json({ error: "ADF build failed." });
   }
 });
 
