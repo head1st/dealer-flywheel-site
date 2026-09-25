@@ -192,6 +192,9 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 @media(max-width:880px){.pk{grid-template-columns:1fr;}}
 .pack{background:var(--paper);padding:30px 26px 32px;display:flex;flex-direction:column;}
 .pack.feature{background:var(--bone);}
+.pk2{grid-template-columns:repeat(2,1fr);}
+@media(max-width:880px){.pk2{grid-template-columns:1fr;}}
+.pack .price.price-text{font-size:22px;letter-spacing:-.015em;margin-top:18px;}
 .pack .label{font-size:13px;color:var(--gold);margin-bottom:12px;letter-spacing:.05em;}
 .pack h3{font-size:21px;margin-bottom:6px;}
 .pack .price{font-size:32px;font-weight:500;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:14px 0 2px;}
