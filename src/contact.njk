@@ -30,10 +30,11 @@ permalink: /contact/
             <form id="booking-form" class="booking-form">
               <input type="hidden" id="booking-date-hidden" name="bookingDate">
               <input type="hidden" id="booking-time" name="bookingTime">
-              <!-- honeypot, hidden from real visitors -->
+              <!-- spam trap: hidden from people. Deliberately given a name and label that
+              browser autofill won't recognize, so autofill never fills it. -->
               <div class="booking-hp" aria-hidden="true">
-                <label for="booking-company">Company</label>
-                <input type="text" id="booking-company" name="company" tabindex="-1" autocomplete="off">
+                <label for="booking-hpx">Leave this field empty</label>
+                <input type="text" id="booking-hpx" name="hp_x9" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore>
               </div>
               <label class="booking-label" for="booking-name">Name</label>
               <input class="booking-input" type="text" id="booking-name" name="name" required>

@@ -106,11 +106,19 @@ app.get("/api/availability", availabilityLimiter, async (req, res) => {
 });
 
 app.post("/api/book", formLimiter, async (req, res) => {
-  const { date, time, name, email, phone, notes, company } = req.body || {};
+  const { date, time, name, email, phone, notes, hp_x9 } = req.body || {};
 
-  // Honeypot: a real visitor never fills the hidden "company" field.
-  if (company) {
-    return res.json({ success: true });
+  // Spam trap: the hidden hp_x9 field is invisible to people and named so
+  // browser autofill ignores it. If it's filled anyway, don't book the
+  // calendar, but never silently drop it either: log it and email the owner
+  // the details, so a real lead can't disappear.
+  if (hp_x9) {
+    console.warn("booking spam trap filled:", { name, email, date, time });
+    res.json({ success: true });
+    emailer
+      .sendSuspectBooking({ name, email, phone, notes, date, time, trap: hp_x9 })
+      .catch((e) => console.error("suspect-booking email failed:", e));
+    return;
   }
 
   if (typeof date !== "string" || !DATE_RE.test(date)) {
@@ -200,10 +208,10 @@ function cleanText(v, max = MAX_TEXT) {
 app.post("/api/discovery", formLimiter, async (req, res) => {
   const body = req.body || {};
 
-  // Honeypot: a real visitor never fills the hidden "company" field.
-  if (cleanText(body.company)) {
-    return res.json({ success: true });
-  }
+  // Spam trap (see /api/book). A filled trap no longer drops the submission;
+  // it's processed normally and flagged in the email subject.
+  const trapFilled = Boolean(cleanText(body.hp_x9));
+  if (trapFilled) console.warn("discovery spam trap filled:", cleanText(body.business, 200));
 
   const business = cleanText(body.business, 200);
   const respondentName = cleanText(body.respondentName, 200);
@@ -248,6 +256,7 @@ app.post("/api/discovery", formLimiter, async (req, res) => {
     q_makes: cleanText(body.q_makes),
     categories,
     q_gap: cleanText(body.q_gap),
+    trapFilled,
   };
 
   try {

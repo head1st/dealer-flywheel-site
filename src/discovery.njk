@@ -16,10 +16,11 @@ permalink: /discovery/
   <div class="wrap">
     <div class="disc-wrap">
       <form id="disc-form" class="disc-form">
-        <!-- honeypot, hidden from real visitors -->
+        <!-- spam trap: hidden from people. Deliberately given a name and label that
+             browser autofill won't recognize, so autofill never fills it. -->
         <div class="booking-hp" aria-hidden="true">
-          <label for="disc-company">Company</label>
-          <input type="text" id="disc-company" name="company" tabindex="-1" autocomplete="off">
+          <label for="disc-hpx">Leave this field empty</label>
+          <input type="text" id="disc-hpx" name="hp_x9" tabindex="-1" autocomplete="off" data-lpignore="true" data-1p-ignore>
         </div>
 
         <div class="disc-block">

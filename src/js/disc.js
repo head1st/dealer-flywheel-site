@@ -70,12 +70,6 @@
     var submitBtn = form.querySelector('button[type="submit"]');
 
     var fd = new FormData(form);
-    if (fd.get("company")) {
-      // Honeypot tripped — pretend success, send nothing.
-      form.innerHTML = '<p class="booking-summary">Thanks — that\'s in.</p>';
-      return;
-    }
-
     // Every radio group in PRI_ITEMS is required; the browser's native
     // validation handles that via `required` on one input per group.
     if (!form.reportValidity()) return;
@@ -97,7 +91,7 @@
       });
 
     var payload = {
-      company: fd.get("company"), // honeypot, expected empty
+      hp_x9: fd.get("hp_x9"), // spam trap, expected empty; the server decides
       business: fd.get("business"),
       respondentName: fd.get("respondentName"),
       role: fd.get("role"),

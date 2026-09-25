@@ -132,7 +132,7 @@
       email: form.elements.email.value,
       phone: form.elements.phone.value,
       notes: form.elements.notes.value,
-      company: form.elements.company.value, // honeypot
+      hp_x9: form.elements.hp_x9.value, // spam trap, expected empty
     };
 
     fetch("/api/book", {
