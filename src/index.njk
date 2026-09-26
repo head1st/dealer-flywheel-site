@@ -4,34 +4,33 @@ title: "Dealer Flywheel"
 description: "Your dealership already has the technology. Dealer Flywheel is a vendor-neutral implementation partner for new-car dealerships on Long Island. We find the gaps between your systems and fix them."
 permalink: /
 ---
-<div class="hero">
-  <div class="wrap">
-    <div class="herogrid">
-      <div>
-        <h1>Your dealership already has the technology.<em>We make it work together.</em></h1>
-        <p class="sub">Your dealership runs on a DMS, CRM, phones, website, OEM systems, desking and F&amp;I tools, service platforms, and more. We don't sell you another platform. We make the technology you already pay for work better together.</p>
-        <div class="btnrow">
-          <a class="btn" href="/contact/">Book a technology conversation</a>
-          <a class="btn ghost" href="/method/">See how we work</a>
-        </div>
-      </div>
-      <div class="heromark">
-        {% include "mark.njk" %}
-      </div>
+<section class="fhero" id="fhero" aria-label="How Dealer Flywheel connects a dealership">
+  <div class="fh-glow" id="fhGlow" aria-hidden="true"></div>
+  <div class="fh-main">
+    <div class="fh-stage" id="fhStage" role="img" aria-label="Diagram of a dealership: nine departments and their systems start disconnected, pair up, line up in the order work moves and connect around the Dealer Flywheel logo. A new tool knocks it out of alignment and is absorbed.">
+      <canvas id="fhCanvas"></canvas>
+      <div class="fh-tip" id="fhTip" hidden><b id="fhTipName"></b><span id="fhTipText"></span></div>
     </div>
-    <div class="method-strip">
-      <div><b>Map</b>how work happens</div>
-      <div><b>Find</b>where value leaks</div>
-      <div><b>Prioritize</b>what's worth fixing</div>
-      <div><b>Design</b>the workflow</div>
-      <div><b>Build</b>the solution</div>
-      <div><b>Deploy</b>into the store</div>
-      <div><b>Train</b>your team</div>
-      <div><b>Measure</b>what changed</div>
-      <div><b>Flywheel</b>find the next one</div>
+    <div class="fh-copy" id="fhCopy" aria-live="polite">
+      <div class="fh-body">
+        <p class="fh-eyebrow ln" style="--i:0"><span class="idx" id="fhIdx">01</span><span id="fhTag">The store today</span></p>
+        <h1 class="fh-headline ln" style="--i:1" id="fhHl">Your dealership already has the technology.</h1>
+        <p class="fh-sub ln" style="--i:2" id="fhSub">Nine departments and a stack of systems, all running at once and rarely talking to each other.</p>
+        <div class="fh-ctas ln" style="--i:3" id="fhCtas" hidden>
+          <a class="btn" href="/contact/">Book the 20-minute conversation</a>
+          <a class="btn ghost" href="/pricing/">See the Diagnostic</a>
+        </div>
+        <p class="fh-hint ln" style="--i:3" id="fhHint"><i></i><span id="fhHintTxt">Scroll to organize the store</span></p>
+      </div>
+      <nav class="fh-steps" aria-label="Hero steps">
+        <div class="fh-bars" id="fhBars"></div>
+        <span class="fh-count" id="fhCount"><b>01</b> / 06</span>
+        <button class="fh-next" id="fhNext" type="button" aria-label="Next step"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></button>
+      </nav>
     </div>
   </div>
-</div>
+</section>
+<script src="/js/hero.js" defer></script>
 
 <section id="problem">
   <div class="wrap">
