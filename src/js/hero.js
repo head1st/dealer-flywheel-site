@@ -482,21 +482,29 @@ function frame(now){
 
   // the gold light: one path per frame
   const pulseA = mixLv('pulse');
-  let lit = null, pulsePos = null, seg = null;
+  let lit = null, pulsePos = null, seg = null, landing = null;
   if (pulseA > .01) {
     const path = beat === LAST ? PATH_B : PATH_A, L = path.length;
-    const u = pulseT / SEG, k = Math.floor(u) % L, f = u - Math.floor(u);
-    const A = DEP[path[k]], B = DEP[path[(k + 1) % L]];
-    if (f < .3) { lit = A; pulsePos = P(A); }
+    const adj = (a, b) => (b.idx - a.idx + DEP.length) % DEP.length === 1;
+    // a crossing (the equity mining line) gets a longer, slower beat than a step around the ring
+    const durs = path.map((id, i) => adj(DEP[id], DEP[path[(i + 1) % L]]) ? SEG : SEG * 1.8);
+    let tt = pulseT % durs.reduce((a, b) => a + b, 0), k = 0;
+    while (tt >= durs[k]) { tt -= durs[k]; k++; }
+    const f = tt / durs[k];
+    const A = DEP[path[k]], B = DEP[path[(k + 1) % L]], before = DEP[path[(k - 1 + L) % L]];
+    if (f < .3) {
+      lit = A; pulsePos = P(A);
+      if (!adj(before, A)) landing = { node:A, q:f / .3 };
+    }
     else {
       const e = ease((f - .3) / .7);
-      if ((B.idx - A.idx + DEP.length) % DEP.length === 1) {
+      if (adj(A, B)) {
         const a1 = A.ang + 40 * DEG * e;
         pulsePos = polar(G, a1 + rot, G.r); seg = { type:'arc', a0:A.ang + rot, a1:a1 + rot };
       } else {
         const ch = CHORDS.find(c => (c.a === A && c.b === B) || (c.a === B && c.b === A));
         const C = chordCtrl(ch);
-        pulsePos = bez(P(A), C, P(B), e); seg = { type:'chord', A:P(A), B:P(B), C, e };
+        pulsePos = bez(P(A), C, P(B), e); seg = { type:'chord', A:P(A), B:P(B), C, e, ch };
       }
     }
   }
@@ -583,11 +591,21 @@ function frame(now){
     const C = chordCtrl(ch), A = P(ch.a), B = P(ch.b);
     const brk = breakAmt(k + 3);
     const hot = sel && hiDep.has(ch.a) && hiDep.has(ch.b);
+    const crossing = seg && seg.type === 'chord' && seg.ch === ch ? pulseA * Math.sin(Math.PI * Math.min(1, seg.e * 1.15)) : 0;
+    const steady = reduced && beat === LAST && ch === CHORDS[1] ? 1 : 0;
+    const glowA = Math.max(crossing, steady);
     if (brk > .5) { curve(A, C, B, rgba(C_BONE, .28), 1, 0, .28); curve(A, C, B, rgba(C_BONE, .28), 1, .72, 1); }
-    else curve(A, C, B, hot ? rgba(C_BONE, .8) : rgba(C_BONE, .24 * (1 - brk)), 1.2, 0, pr);
-    if (!compact) {
+    else {
+      curve(A, C, B, hot ? rgba(C_BONE, .8) : rgba(C_BONE, .24 * (1 - brk)), 1.2, 0, pr);
+      if (glowA > .01) {
+        curve(A, C, B, rgba(C_GOLD, .16 * glowA), 8, 0, 1);
+        curve(A, C, B, rgba(C_GOLD, .75 * glowA), 1.8, 0, 1);
+      }
+    }
+    if (!compact || glowA > .01) {
       const m = bez(A, C, B, ch.le);
-      label(ch.name.toUpperCase(), m.x, m.y - 9, 'center', fChord, rgba(C_GRAPH, pr * labelFade * (1 - brk)));
+      const col = glowA > .01 ? rgba(C_GOLD, Math.max(pr * labelFade * (1 - brk) * .6, glowA)) : rgba(C_GRAPH, pr * labelFade * (1 - brk));
+      label(ch.name.toUpperCase(), m.x, m.y - 9, 'center', glowA > .01 ? "600 10.5px 'IBM Plex Mono', ui-monospace, Menlo, monospace" : fChord, col);
     }
   });
 
@@ -596,7 +614,7 @@ function frame(now){
     if (seg.type === 'arc') {
       ctx.strokeStyle = rgba(C_GOLD, .8 * pulseA); ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(G.x, G.y, G.r, seg.a0, seg.a1); ctx.stroke();
-    } else curve(seg.A, seg.C, seg.B, rgba(C_GOLD, .8 * pulseA), 2, 0, seg.e);
+    } else curve(seg.A, seg.C, seg.B, rgba(C_GOLD, pulseA), 2.6, 0, seg.e);
   }
 
   // the logo's gold line reaches out and catches the new tool
@@ -703,16 +721,26 @@ function frame(now){
 
   // the gold light itself
   if (pulsePos && pulseA > .01) {
-    ctx.fillStyle = rgba(C_GOLD, .18 * pulseA);
-    ctx.beginPath(); ctx.arc(pulsePos.x, pulsePos.y, 11, 0, TAU); ctx.fill();
+    const big = seg && seg.type === 'chord' ? 1 : 0;
+    ctx.fillStyle = rgba(C_GOLD, (.18 + .08 * big) * pulseA);
+    ctx.beginPath(); ctx.arc(pulsePos.x, pulsePos.y, 11 + 6 * big, 0, TAU); ctx.fill();
     ctx.fillStyle = rgba(C_GOLD, pulseA);
-    ctx.beginPath(); ctx.arc(pulsePos.x, pulsePos.y, 3.6, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(pulsePos.x, pulsePos.y, 3.6 + 1.4 * big, 0, TAU); ctx.fill();
+  }
+  if (landing && pulseA > .01) {
+    const p = P(landing.node);
+    [0, .25].forEach((d, j) => {
+      const q = clamp((landing.q - d) / (1 - d)); if (q <= 0 || q >= 1) return;
+      ctx.strokeStyle = rgba(C_GOLD, (1 - q) * (j ? .45 : .85) * pulseA); ctx.lineWidth = j ? 1 : 1.8;
+      ctx.beginPath(); ctx.arc(p.x, p.y, lerp(8, R * .2, easeOut(q)), 0, TAU); ctx.stroke();
+    });
   }
 
   ctx.restore();
 
   // tip: selection first; on phones the light names each department as it passes
   let info = tipFor(sel);
+  if (!info && compact && seg && seg.type === 'chord' && pulseA > .5) info = ['Equity mining', 'A service customer becomes the next sale'];
   if (!info && compact && ordered && lit && pulseA > .5) info = tipFor(lit);
   setTip(info);
 
