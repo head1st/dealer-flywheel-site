@@ -66,6 +66,9 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
   .navcta .short{display:inline;}
 }
 @media(max-width:340px){.brand .wm{font-size:11px;letter-spacing:.1em;}}
+/* home: header lines up with the full-width hero */
+.navwide .navin{max-width:none;padding:0 clamp(24px,4vw,64px);}
+@media(max-width:600px){.navwide .navin{padding:0 20px;}}
 .btn{display:inline-block;padding:12px 20px;font-size:14.5px;font-weight:500;border:1px solid var(--gold);color:var(--ink);background:var(--gold);letter-spacing:.005em;cursor:pointer;}
 .btn:hover{background:#BE9C56;border-color:#BE9C56;}
 .btn.ghost{background:transparent;color:var(--bone);border-color:rgba(244,243,240,.35);}

@@ -22,7 +22,7 @@
 </head>
 <body>
 
-<header class="nav">
+<header class="nav{% if page.url == "/" %} navwide{% endif %}">
   <div class="navin">
     <a class="brand" href="/">
       {% include "mark.njk" %}
