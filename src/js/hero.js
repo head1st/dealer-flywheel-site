@@ -43,8 +43,7 @@ const VLINKS = USES.ven.map(d => ({ c:VEN, d:byId[d] }));
 
 /* the two handoffs that cross the ring */
 const CHORDS = [
-  { a:byId.sal, b:byId.used, name:'Trade-in', k:.5, t0:1.7, le:.5 },
-  { a:byId.svc, b:byId.sal, name:'Service to Sales', k:.62, t0:2.4, le:.28 }
+  { a:byId.sal, b:byId.used, name:'Trade-in', k:.5, t0:1.7, le:.5 }
 ];
 const GROUPS = [['Variable ops',0,4],['Office',5,6],['Fixed ops',7,8]]
   .map(g => ({ name:g[0], a:DEP[g[1]].ang, b:DEP[g[2]].ang, mid:(DEP[g[1]].ang + DEP[g[2]].ang) / 2 }));
@@ -94,7 +93,7 @@ const BEATS = [
 const LAST = BEATS.length - 1;
 const T_IN = .3, T_HIT = 1.2, CAP0 = 2.2, CAP1 = 3.4, VS0 = 3.4, PUL = 4.4;
 const PATH_A = [1, 2, 3, 4, 5, 6, 7, 8, 0];   // a new customer: lead to service, then recon back to Used Cars
-const PATH_B = [8, 3, 4, 5, 6, 7];            // the flywheel: Service hands an opportunity to Sales, and the loop repeats
+const PATH_B = [8, 3, 4, 5, 6, 7];            // the flywheel: the loop repeats
 const SEG = 1.5;
 
 /* ---------- DOM ---------- */
@@ -763,7 +762,6 @@ function frame(now){
 
   // tip: selection first; on phones the light names each department as it passes
   let info = tipFor(sel);
-  if (!info && compact && seg && seg.type === 'chord' && pulseA > .5) info = ['Service to Sales', 'A service opportunity reaches the Sales team'];
   if (!info && compact && ordered && lit && pulseA > .5) info = tipFor(lit);
   setTip(info);
 
