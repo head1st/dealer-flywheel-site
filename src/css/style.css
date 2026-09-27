@@ -546,3 +546,40 @@ footer .brand .wm{color:#7E848C;}
 .home-section.handoffs .flow-card i{background:rgba(11,12,14,.22)}
 .home-section.handoffs .flow-card b{color:#8A6D2E}
 .fh-steps[hidden]{display:none!important}
+
+
+/* Homepage requested fixes — production-safe overrides */
+.fh-steps,
+.fh-steps[hidden],
+.fh-hint{display:none!important}
+
+/* WHERE IT BREAKS: explicit light treatment */
+.home-section.handoffs{
+  background:#FFFFFF!important;
+  color:#0B0C0E!important;
+  border-top:1px solid rgba(11,12,14,.13)!important;
+}
+.home-section.handoffs .section-intro h2,
+.home-section.handoffs .section-intro h2 span,
+.home-section.handoffs .handoff-story h3,
+.home-section.handoffs .handoff-verdict h2{color:#0B0C0E!important}
+.home-section.handoffs .section-intro>p,
+.home-section.handoffs .handoff-story p,
+.home-section.handoffs .handoff-verdict p{color:#6E747C!important}
+.home-section.handoffs .handoff-story{border-color:rgba(11,12,14,.13)!important}
+.home-section.handoffs .handoff-verdict{border-color:rgba(11,12,14,.13)!important}
+.home-section.handoffs .handoff-visual{
+  background:#F4F3F0!important;
+  border-color:rgba(11,12,14,.13)!important;
+}
+.home-section.handoffs .handoff-visual::before{color:#6E747C!important}
+.home-section.handoffs .flow-card span{
+  color:#0B0C0E!important;
+  border-color:rgba(11,12,14,.22)!important;
+}
+.home-section.handoffs .flow-card i{background:rgba(11,12,14,.28)!important}
+.home-section.handoffs .flow-card i.broken{
+  background:linear-gradient(90deg,rgba(11,12,14,.28) 0 43%,transparent 43% 62%,rgba(11,12,14,.28) 62%)!important;
+}
+.home-section.handoffs .flow-card b,
+.home-section.handoffs .handoff-story>span{color:#806321!important}
