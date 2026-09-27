@@ -509,7 +509,7 @@ function frame(now){
   if (pulseA > .01) {
     const path = beat === LAST ? PATH_B : PATH_A, L = path.length;
     const adj = (a, b) => (b.idx - a.idx + DEP.length) % DEP.length === 1;
-    // a crossing (the equity mining line) gets a longer, slower beat than a step around the ring
+    // a cross-department handoff gets a longer, slower beat than a step around the ring
     const durs = path.map((id, i) => adj(DEP[id], DEP[path[(i + 1) % L]]) ? SEG : SEG * 1.8);
     let tt = pulseT % durs.reduce((a, b) => a + b, 0), k = 0;
     while (tt >= durs[k]) { tt -= durs[k]; k++; }
@@ -763,7 +763,7 @@ function frame(now){
 
   // tip: selection first; on phones the light names each department as it passes
   let info = tipFor(sel);
-  if (!info && compact && seg && seg.type === 'chord' && pulseA > .5) info = ['Equity mining', 'A service customer becomes the next sale'];
+  if (!info && compact && seg && seg.type === 'chord' && pulseA > .5) info = ['Service to Sales', 'A service opportunity reaches the Sales team'];
   if (!info && compact && ordered && lit && pulseA > .5) info = tipFor(lit);
   setTip(info);
 
