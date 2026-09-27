@@ -105,7 +105,7 @@ const tip = $('fhTip'), tipName = $('fhTipName'), tipText = $('fhTipText');
 const bars = $('fhBars'), count = $('fhCount'), nextBtn = $('fhNext');
 const stepsNav = document.querySelector('.fh-steps');
 if (stepsNav) stepsNav.hidden = true;
-$('fhHintTxt').textContent = coarse ? 'Swipe up to organize the store' : 'Scroll to organize the store';
+$('fhHintTxt').textContent = 'The store organizes itself';
 BEATS.forEach((b, i) => {
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -279,179 +279,18 @@ function mixLv(name){ return lerp(lv(name, prev, 99), lv(name, beat, tNow), mix)
 const DUST = Array.from({ length:64 }, () => ({ x:rand(), y:rand(), r:.5 + rand() * 1.1, a:.06 + rand() * .22, z:.3 + rand() * .9, v:.003 + rand() * .008 }));
 
 /* ---------- autoplay ----------
-   The hero advances on its own and never captures page scrolling. */
+   Advance one frame every five seconds. Page scrolling is never captured. */
 let autoTimer = null;
 function scheduleAuto(){
   clearTimeout(autoTimer);
   if (reduced || document.hidden) return;
-  autoTimer = setTimeout(() => { go(beat === LAST ? 0 : beat + 1); scheduleAuto(); }, 5000);
+  autoTimer = setTimeout(() => {
+    go(beat === LAST ? 0 : beat + 1);
+    scheduleAuto();
+  }, 5000);
 }
 scheduleAuto();
 document.addEventListener('visibilitychange', scheduleAuto);
-
-/* ---------- geometry ---------- */
-function measure(){
-  const r = stage.getBoundingClientRect();
-  W = r.width; H = r.height; dpr = Math.min(2, window.devicePixelRatio || 1);
-  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-  compact = W < 600;
-  const rmF = compact ? .15 : .14, labelW = compact ? 16 : 128, tipRoom = compact ? 46 : 0;
-  R = Math.max(56, Math.min((W - 2 * labelW) / (2 * (1 + rmF)), (H - (compact ? 36 : 64) - tipRoom) / (2 * (1 + rmF)), 330));
-  RM = R * rmF;
-  cx = W / 2; cy = (H - tipRoom) / 2;
-}
-new ResizeObserver(measure).observe(stage);
-measure();
-
-const G0 = () => ({ x:cx, y:cy, r:R });
-const polar = (g, a, r) => ({ x:g.x + Math.cos(a) * r, y:g.y + Math.sin(a) * r });
-
-function impactEnv(s){
-  if (s < 0) return 0;
-  if (s < .18) return easeOut(s / .18);
-  const back = 1 - ease(clamp((s - .7) / 1.3));
-  return back * (1 + .14 * Math.sin(s * 15) * Math.exp(-s * 2.2));
-}
-const bump = s => s < 0 ? 0 : s < .1 ? s / .1 : 1 - ease(clamp((s - .4) / 1.2));
-const capP = (b, t) => b < 4 ? 0 : b === 4 ? ease(clamp((t - CAP0) / (CAP1 - CAP0))) : 1;
-const impactPoint = () => polar(G0(), -30 * DEG + rot, R * .97);
-const astroStart = () => ({ x:W + 60, y:-60 });
-
-function chaosPos(n){
-  const padX = compact ? 20 : 28, padY = 22;
-  const spanW = W - padX * 2 - (compact ? 50 : 120);
-  const amp = compact ? 12 : 20;
-  let x = padX + n.cx * spanW + Math.sin(T * .42 + n.ph) * amp;
-  let y = padY + n.cy * (H - padY * 2 - 12) + Math.cos(T * .35 + n.ph * 1.3) * amp * .75;
-  if (!reduced) { x += Math.sin(T * 9 + n.ph) * 1.2; y += Math.cos(T * 11 + n.ph) * 1.2; }
-  return { x, y };
-}
-function venPos(b, t){
-  const g = G0(), slot = polar(g, VEN.ang + rot, g.r * .32);
-  if (b !== 4) return slot;
-  const I = impactPoint(), S = astroStart();
-  if (t < T_HIT) { const q = clamp((t - T_IN) / (T_HIT - T_IN)); const e = q * q; return { x:lerp(S.x, I.x, e), y:lerp(S.y, I.y, e) }; }
-  const ix = g.x - I.x, iy = g.y - I.y, il = Math.hypot(ix, iy) || 1;
-  const D = { x:I.x + ix / il * R * .16 * easeOut(clamp((t - T_HIT) / 1)), y:I.y + iy / il * R * .16 * easeOut(clamp((t - T_HIT) / 1)) };
-  if (t < CAP0) return D;
-  const c = ease(clamp((t - CAP0) / (CAP1 - CAP0)));
-  const px = -(slot.y - D.y), py = slot.x - D.x, pl = Math.hypot(px, py) || 1;
-  const bow = Math.sin(Math.PI * c) * R * .12;
-  return { x:lerp(D.x, slot.x, c) + px / pl * bow, y:lerp(D.y, slot.y, c) + py / pl * bow };
-}
-const venAlpha = (b, t) => b < 4 ? 0 : b === 4 ? clamp((t - T_IN) / .15) : 1;
-const orbA = m => m.orb0 + (reduced ? 0 : T * .12);
-
-function layout(b, n, t){
-  if (n === VEN) return venPos(b, t);
-  if (b === 0) return chaosPos(n);
-  if (n.kind === 'moon') {
-    const h = layout(b, n.host, t), r = RM * (n.minor ? .72 : 1), a = orbA(n);
-    return { x:h.x + Math.cos(a) * r, y:h.y + Math.sin(a) * r };
-  }
-  const g = G0();
-  let p;
-  if (n.kind === 'core') p = polar(g, n.ang + (b >= 2 ? rot : 0), g.r * .32);
-  else if (b === 1) {
-    p = polar(g, n.looseAng, R * (.84 + n.lr * .18));
-    p.x += Math.sin(T * .4 + n.ph) * 6; p.y += Math.cos(T * .33 + n.ph) * 6;
-  } else p = polar(g, n.ang + rot, g.r);
-  if (b === 4) {
-    const e = impactEnv(t - T_HIT);
-    if (e > 0) {
-      const I = impactPoint(), dx = p.x - I.x, dy = p.y - I.y, d = Math.hypot(dx, dy) || 1;
-      const A = R * .42 * e * (.35 + .65 * Math.exp(-d / (R * .8)));
-      p = { x:p.x + dx / d * A, y:p.y + dy / d * A };
-    }
-  }
-  return p;
-}
-
-/* scalar levels per beat; t = seconds into the beat */
-function lv(name, b, t){
-  switch (name) {
-    case 'wrong': return b === 0 ? 1 : b === 1 ? .2 : b === 4 ? .55 * bump(t - T_HIT) : 0;
-    case 'hub': return b === 0 ? 0 : 1;
-    case 'tether': return b < 1 ? 0 : b === 1 ? clamp((t - .7) / .5) : 1;
-    case 'ring': return b < 2 ? 0 : b === 2 ? easeOut(clamp((t - .3) / .9)) : 1;
-    case 'groups': return b < 2 ? 0 : b === 2 ? clamp((t - 1) / .6) : 1;
-    case 'coreRing': return b < 3 ? 0 : b === 3 ? clamp(tNow / .6) : 1;
-    case 'pulse':
-      if (b < 3 || reduced) return 0;
-      if (b === 3) return clamp((t - 3) / .4);
-      if (b === 4) return t < PUL ? clamp(1 - (t - .95) / .25) : clamp((t - PUL) / .5);
-      return clamp((t - .4) / .4);
-    case 'ven': return venAlpha(b, t);
-    case 'cap': return capP(b, t);
-    case 'crown': return b === LAST ? clamp((t - .6) / .8) : 0;
-  }
-  return 0;
-}
-const linkLv = (b, k, t) => b < 3 ? 0 : b === 3 ? easeOut(clamp((t - .5 - k * .035) / .4)) : 1;
-const chordLv = (b, c, t) => b < 3 ? 0 : b === 3 ? easeOut(clamp((t - c.t0) / .7)) : 1;
-const vLinkLv = (b, k, t) => b < 4 ? 0 : b === 4 ? easeOut(clamp((t - VS0 - k * .12) / .5)) : 1;
-function breakAmt(k){
-  if (beat !== 4 || reduced) return 0;
-  const s = tNow - T_HIT;
-  if (s < 0) return 0;
-  if (s < .08) return s / .08;
-  return 1 - ease(clamp((s - 1 - (k % 7) * .06) / .8));
-}
-function mixLv(name){ return lerp(lv(name, prev, 99), lv(name, beat, tNow), mix); }
-
-/* ---------- ambient particles (slowest parallax layer) ---------- */
-const DUST = Array.from({ length:64 }, () => ({ x:rand(), y:rand(), r:.5 + rand() * 1.1, a:.06 + rand() * .22, z:.3 + rand() * .9, v:.003 + rand() * .008 }));
-
-/* ---------- input ----------
-   The hero holds the page while it is at the top: one gesture moves one frame.
-   Past the last frame, the page scrolls normally; back at the top, scrolling up steps back. */
-const atTop = () => window.scrollY < 4;
-let wheelAcc = 0, wheelLock = false, lastWheel = 0, wasBelow = false;
-window.addEventListener('scroll', () => {
-  if (!atTop()) { wasBelow = true; return; }
-  if (wasBelow) { wasBelow = false; wheelLock = true; lastWheel = performance.now(); }
-}, { passive:true });
-const wants = dirn => atTop() && (dirn > 0 ? beat < LAST : beat > 0);
-window.addEventListener('wheel', e => {
-  if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-  const dirn = e.deltaY > 0 ? 1 : -1;
-  const now = performance.now();
-  if (!wants(dirn)) { if (wheelLock) lastWheel = now; return; }
-  e.preventDefault();
-  if (wheelLock) { lastWheel = now; return; }
-  wheelAcc += e.deltaY;
-  if (Math.abs(wheelAcc) > 34) { go(beat + (wheelAcc > 0 ? 1 : -1)); wheelAcc = 0; wheelLock = true; lastWheel = now; }
-}, { passive:false });
-
-let tStart = null, tCapture = null;
-hero.addEventListener('touchstart', e => {
-  if (e.touches.length !== 1) { tStart = null; return; }
-  tStart = { x:e.touches[0].clientX, y:e.touches[0].clientY }; tCapture = null;
-}, { passive:true });
-hero.addEventListener('touchmove', e => {
-  if (!tStart) return;
-  const dx = e.touches[0].clientX - tStart.x, dy = e.touches[0].clientY - tStart.y;
-  if (tCapture === null && Math.hypot(dx, dy) > 8) tCapture = Math.abs(dy) > Math.abs(dx) && wants(dy < 0 ? 1 : -1);
-  if (tCapture) e.preventDefault();
-}, { passive:false });
-hero.addEventListener('touchend', e => {
-  if (!tStart) return;
-  const t = e.changedTouches[0], dx = t.clientX - tStart.x, dy = t.clientY - tStart.y;
-  if (Math.hypot(dx, dy) < 10) tapAt(t.clientX, t.clientY, e.target);
-  else if (tCapture && Math.abs(dy) > 60 && Math.abs(dy) > Math.abs(dx) * 1.5 && performance.now() - beatStart > 700) go(beat + (dy < 0 ? 1 : -1));
-  tStart = null; tCapture = null;
-});
-
-window.addEventListener('keydown', e => {
-  if (e.altKey || e.ctrlKey || e.metaKey) return;
-  const tag = e.target && e.target.tagName;
-  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-  let dirn = 0;
-  if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !(e.target.closest && e.target.closest('a,button')))) dirn = 1;
-  else if (e.key === 'ArrowUp' || e.key === 'PageUp') dirn = -1;
-  if (!dirn || !wants(dirn)) return;
-  e.preventDefault(); go(beat + dirn);
-});
 
 stage.addEventListener('click', e => { if (!coarse) tapAt(e.clientX, e.clientY, e.target); });
 let pointer = { x:0, y:0, has:false };
@@ -463,15 +302,6 @@ hero.addEventListener('pointermove', e => {
 });
 stage.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') sel = null; });
 
-let pointer = { x:0, y:0, has:false };
-hero.addEventListener('pointermove', e => {
-  if (e.pointerType !== 'mouse') return;
-  const r = hero.getBoundingClientRect();
-  pointer = { x:e.clientX-r.left, y:e.clientY-r.top, has:true };
-  sel = hit(e.clientX,e.clientY);
-});
-stage.addEventListener('pointerleave', () => { sel=null; });
-stage.addEventListener('click', e => { sel=hit(e.clientX,e.clientY); });
 const POS = new Map();
 const visibleAlpha = n => n === VEN ? mixLv('ven') : 1;
 function hit(clientX, clientY){
