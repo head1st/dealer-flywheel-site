@@ -28,16 +28,19 @@
       {% include "mark.njk" %}
       <span class="wm"><span>DEALER</span> <b>FLYWHEEL</b></span>
     </a>
-    <nav class="navlinks">
-      <a href="/" {% if page.url == "/" %}class="active"{% endif %}>Home</a>
-      <a href="/method/" {% if page.url == "/method/" %}class="active"{% endif %}>Method</a>
-      <a href="/diagnostic/" {% if page.url == "/diagnostic/" %}class="active"{% endif %}>Diagnostic</a>
-      <a href="/work/" {% if page.url == "/work/" %}class="active"{% endif %}>What we build</a>
-      <a href="/demo/" {% if page.url == "/demo/" %}class="active"{% endif %}>Demo</a>
-      <a href="/pricing/" {% if page.url == "/pricing/" %}class="active"{% endif %}>Pricing</a>
-      <a href="/security/" {% if page.url == "/security/" %}class="active"{% endif %}>Security</a>
+    <nav class="navlinks" id="primaryNav" aria-label="Primary navigation">
+      <a href="/method/" {% if page.url == "/method/" or page.url == "/diagnostic/" or page.url == "/pricing/" %}class="active"{% endif %}>How It Works</a>
+      <a href="/work/" {% if page.url == "/work/" or page.url == "/demo/" or page.url == "/equity-mining/" %}class="active"{% endif %}>What We Do</a>
     </nav>
-    <a class="btn navcta" href="/contact/"><span class="long">Book a conversation</span><span class="short">Book a call</span></a>
+    <a class="btn navcta" href="/contact/">Book a Call <span aria-hidden="true">→</span></a>
+    <button class="navtoggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="mobilenav" id="mobileNav" aria-label="Mobile navigation" hidden>
+      <a href="/method/">How It Works</a>
+      <a href="/work/">What We Do</a>
+      <a href="/contact/" class="mobilebook">Book a Call <span aria-hidden="true">→</span></a>
+    </nav>
   </div>
 </header>
 
@@ -51,12 +54,10 @@
       {% include "mark.njk" %}
       <span class="wm"><span>DEALER</span> <b>FLYWHEEL</b></span>
     </a>
-    <nav class="flinks">
-      <a href="/method/">Method</a>
-      <a href="/diagnostic/">Diagnostic</a>
-      <a href="/work/">What we build</a>
-      <a href="/demo/">Demo</a>
-      <a href="/pricing/">Pricing</a>
+    <nav class="flinks" aria-label="Footer navigation">
+      <a href="/method/">How It Works</a>
+      <a href="/work/">What We Do</a>
+      <a href="/about/">About</a>
       <a href="/security/">Security</a>
       <a href="/contact/">Contact</a>
     </nav>
@@ -64,5 +65,28 @@
   </div>
 </footer>
 
+<script>
+(() => {
+  const button = document.querySelector('.navtoggle');
+  const menu = document.getElementById('mobileNav');
+  if (!button || !menu) return;
+  const close = () => {
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-label', 'Open menu');
+    menu.hidden = true;
+    document.body.classList.remove('menu-open');
+  };
+  button.addEventListener('click', () => {
+    const open = button.getAttribute('aria-expanded') !== 'true';
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.hidden = !open;
+    document.body.classList.toggle('menu-open', open);
+  });
+  menu.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  window.addEventListener('resize', () => { if (window.innerWidth > 940) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
 </body>
 </html>
