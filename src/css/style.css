@@ -498,3 +498,34 @@ footer .brand .wm{color:#7E848C;}
 @media(max-width:980px){.home-hero-inner{grid-template-columns:1fr;width:min(100% - 48px,760px);padding-top:50px}.home-hero-copy{padding:55px 0 10px}.network-shell{min-height:520px}.home-hero h1{font-size:clamp(48px,9vw,72px)}.hero-scroll{display:none}.section-intro{grid-template-columns:1fr;gap:24px}.section-intro .mono-kicker{grid-column:auto;margin-bottom:0}.handoff-layout{grid-template-columns:1fr;gap:20px}.handoff-visual{position:relative;top:auto;height:310px}.handoff-story{min-height:auto;padding:42px 0}.method-track{grid-template-columns:repeat(2,1fr)}.method-track article:nth-child(2){border-right:0}.method-track article:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,.12)}}
 @media(max-width:640px){.home-wrap{width:calc(100% - 40px)}.home-hero{min-height:auto}.home-hero-inner{width:calc(100% - 40px);min-height:auto;padding:32px 0 70px}.home-hero-copy{padding:34px 0 0}.home-hero h1{font-size:clamp(42px,13vw,58px);line-height:.98}.hero-lede{font-size:16px;margin-top:24px}.home-actions{display:grid}.home-btn{width:100%}.network-shell{min-height:390px;margin:10px -30px 0}.dealer-network{width:112%;max-width:none}.home-section{padding:82px 0}.section-intro{margin-bottom:48px}.section-intro h2{font-size:clamp(36px,11vw,48px)}.section-intro>p:not(.mono-kicker){font-size:16px}.handoff-visual{display:none}.handoff-story{opacity:1;padding:36px 0}.handoff-story::after{content:"";display:block;margin-top:26px;height:70px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(90deg,transparent 0 8%,#48443e 8% 44%,transparent 44% 56%,#48443e 56% 92%,transparent 92%);opacity:.65}.handoff-verdict{padding-top:55px}.intervention-tabs{display:flex;overflow-x:auto;scrollbar-width:none}.intervention-tabs button{min-width:max-content;padding:18px}.intervention-stage{min-height:290px;padding:45px 18px 75px;gap:8px}.int-node{padding:14px 8px;min-width:74px;font-size:9px}.int-line{width:28px}.int-caption{left:18px;right:18px;bottom:18px}.method-track{grid-template-columns:1fr;border-bottom:0}.method-track article{min-height:auto;border-right:0!important;border-bottom:1px solid rgba(255,255,255,.12)!important;padding:28px 8px 30px 38px}.method-track article::before{width:2px!important;height:0;transition:height .8s}.method-track article.seen::before{height:100%}.method-track h3{margin:18px 0 8px}.department-grid{grid-template-columns:1fr 1fr}.department-grid>div{min-height:120px;padding:16px}.department-grid strong{font-size:22px}.principles>div{grid-template-columns:42px 1fr;gap:12px 16px}.principles p{grid-column:2}.final-inner h2{font-size:clamp(44px,13vw,62px)}}
 @media(prefers-reduced-motion:reduce){.home-btn,.dept circle,.flow-card,.handoff-story,.method-track article::before,.department-grid>div{transition:none!important}.signal{display:none}.network-lines .gold-path{filter:none}}
+
+
+/* ===== Homepage v2: tighter editorial scale ===== */
+.home-section{padding:96px 0}
+.section-intro{margin-bottom:52px;gap:48px}
+.section-intro h2{font-size:clamp(34px,3.8vw,52px);line-height:1.06;letter-spacing:-.035em}
+.section-intro>p:not(.mono-kicker){font-size:16px;line-height:1.65}
+.section-intro.narrow{max-width:820px}
+.section-intro.narrow strong{font-size:18px;margin-top:24px}
+.handoff-layout{gap:64px}
+.handoff-visual{height:340px;top:110px}
+.handoff-story{min-height:38vh;padding:52px 0}
+.handoff-story h3{font-size:clamp(25px,2.4vw,34px);margin:14px 0}
+.handoff-story p{font-size:16px}
+.handoff-verdict{padding-top:56px}
+.handoff-verdict p{font-size:18px}
+.handoff-verdict h2{font-size:clamp(34px,4vw,52px)}
+.intervention-stage{min-height:270px;padding:44px 48px 60px}
+.method-track article{min-height:190px;padding:30px 24px}
+.method-track h3{font-size:22px;margin:30px 0 10px}
+.diagnostic-path{margin-top:52px;padding-top:32px}
+.diagnostic-path h3{font-size:clamp(22px,2.2vw,30px)}
+.department-grid>div{min-height:135px;padding:20px}
+.department-grid strong{font-size:clamp(22px,2.3vw,32px)}
+.principles>div{padding:22px 0}
+.principles h3{font-size:18px}
+.home-final{min-height:64vh}
+.final-inner h2{font-size:clamp(40px,5vw,64px);line-height:1}
+.final-inner>p:not(.mono-kicker){font-size:18px;margin:24px 0}
+@media(max-width:980px){.home-section{padding:80px 0}.handoff-story{min-height:auto}.section-intro{margin-bottom:42px}}
+@media(max-width:640px){.home-section{padding:68px 0}.section-intro h2{font-size:clamp(31px,9vw,40px)}.handoff-story{padding:30px 0}.handoff-verdict h2{font-size:36px}.intervention-stage{min-height:240px}.department-grid>div{min-height:104px}.department-grid strong{font-size:20px}.home-final{min-height:70vh}.final-inner h2{font-size:clamp(38px,11vw,50px)}}
