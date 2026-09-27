@@ -105,7 +105,8 @@ const tip = $('fhTip'), tipName = $('fhTipName'), tipText = $('fhTipText');
 const bars = $('fhBars'), count = $('fhCount'), nextBtn = $('fhNext');
 const stepsNav = document.querySelector('.fh-steps');
 if (stepsNav) stepsNav.hidden = true;
-$('fhHintTxt').textContent = 'The store organizes itself';
+$('fhHint').hidden = true;
+$('fhHintTxt').textContent = coarse ? 'Swipe up to organize the store' : 'Scroll to organize the store';
 BEATS.forEach((b, i) => {
   const btn = document.createElement('button');
   btn.type = 'button';
@@ -164,6 +165,20 @@ nextBtn.addEventListener('click', () => {
   const next = hero.nextElementSibling;
   if (next) next.scrollIntoView({ behavior:reduced ? 'auto' : 'smooth' });
 });
+
+/* autoplay: advance the intact six-frame animation every five seconds */
+let autoTimer = null;
+function scheduleAuto(){
+  clearTimeout(autoTimer);
+  if (reduced || document.hidden) return;
+  autoTimer = setTimeout(() => {
+    go(beat === LAST ? 0 : beat + 1);
+    scheduleAuto();
+  }, 5000);
+}
+scheduleAuto();
+document.addEventListener('visibilitychange', scheduleAuto);
+
 
 /* ---------- geometry ---------- */
 function measure(){
@@ -278,19 +293,61 @@ function mixLv(name){ return lerp(lv(name, prev, 99), lv(name, beat, tNow), mix)
 /* ---------- ambient particles (slowest parallax layer) ---------- */
 const DUST = Array.from({ length:64 }, () => ({ x:rand(), y:rand(), r:.5 + rand() * 1.1, a:.06 + rand() * .22, z:.3 + rand() * .9, v:.003 + rand() * .008 }));
 
-/* ---------- autoplay ----------
-   Advance one frame every five seconds. Page scrolling is never captured. */
-let autoTimer = null;
-function scheduleAuto(){
-  clearTimeout(autoTimer);
-  if (reduced || document.hidden) return;
-  autoTimer = setTimeout(() => {
-    go(beat === LAST ? 0 : beat + 1);
-    scheduleAuto();
-  }, 5000);
-}
-scheduleAuto();
-document.addEventListener('visibilitychange', scheduleAuto);
+/* ---------- input ----------
+   The hero holds the page while it is at the top: one gesture moves one frame.
+   Past the last frame, the page scrolls normally; back at the top, scrolling up steps back. */
+const atTop = () => window.scrollY < 4;
+let wheelAcc = 0, wheelLock = false, lastWheel = 0, wasBelow = false;
+window.addEventListener('scroll', () => {
+  if (!atTop()) { wasBelow = true; return; }
+  if (wasBelow) { wasBelow = false; wheelLock = true; lastWheel = performance.now(); }
+}, { passive:true });
+const wants = dirn => atTop() && (dirn > 0 ? beat < LAST : beat > 0);
+window.addEventListener('wheel', e => {
+  return; // frames autoplay; browser scrolling remains native
+  if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  const dirn = e.deltaY > 0 ? 1 : -1;
+  const now = performance.now();
+  if (!wants(dirn)) { if (wheelLock) lastWheel = now; return; }
+  e.preventDefault();
+  if (wheelLock) { lastWheel = now; return; }
+  wheelAcc += e.deltaY;
+  if (Math.abs(wheelAcc) > 34) { go(beat + (wheelAcc > 0 ? 1 : -1)); wheelAcc = 0; wheelLock = true; lastWheel = now; }
+}, { passive:false });
+
+let tStart = null, tCapture = null;
+hero.addEventListener('touchstart', e => {
+  return; // do not capture touch scrolling
+  if (e.touches.length !== 1) { tStart = null; return; }
+  tStart = { x:e.touches[0].clientX, y:e.touches[0].clientY }; tCapture = null;
+}, { passive:true });
+hero.addEventListener('touchmove', e => {
+  return; // do not capture touch scrolling
+  if (!tStart) return;
+  const dx = e.touches[0].clientX - tStart.x, dy = e.touches[0].clientY - tStart.y;
+  if (tCapture === null && Math.hypot(dx, dy) > 8) tCapture = Math.abs(dy) > Math.abs(dx) && wants(dy < 0 ? 1 : -1);
+  if (tCapture) e.preventDefault();
+}, { passive:false });
+hero.addEventListener('touchend', e => {
+  return; // do not use swipe to advance frames
+  if (!tStart) return;
+  const t = e.changedTouches[0], dx = t.clientX - tStart.x, dy = t.clientY - tStart.y;
+  if (Math.hypot(dx, dy) < 10) tapAt(t.clientX, t.clientY, e.target);
+  else if (tCapture && Math.abs(dy) > 60 && Math.abs(dy) > Math.abs(dx) * 1.5 && performance.now() - beatStart > 700) go(beat + (dy < 0 ? 1 : -1));
+  tStart = null; tCapture = null;
+});
+
+window.addEventListener('keydown', e => {
+  return; // do not capture page-navigation keys
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  const tag = e.target && e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  let dirn = 0;
+  if (e.key === 'ArrowDown' || e.key === 'PageDown' || (e.key === ' ' && !(e.target.closest && e.target.closest('a,button')))) dirn = 1;
+  else if (e.key === 'ArrowUp' || e.key === 'PageUp') dirn = -1;
+  if (!dirn || !wants(dirn)) return;
+  e.preventDefault(); go(beat + dirn);
+});
 
 stage.addEventListener('click', e => { if (!coarse) tapAt(e.clientX, e.clientY, e.target); });
 let pointer = { x:0, y:0, has:false };
