@@ -1,0 +1,81 @@
+---
+layout: false
+permalink: /homepage-os2/
+eleventyExcludeFromCollections: true
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Operating View Prototype — Dealer Flywheel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/homepage-os2.css">
+</head>
+<body class="os2">
+  <div class="mobile-note">
+    <strong>Dealer Flywheel / Operating View</strong>
+    <p>This prototype is validating the desktop state-machine first. The mobile composition will be designed separately rather than shrinking the workstation UI.</p>
+  </div>
+
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Dealer Flywheel home">
+        <span class="mark">◐</span>
+        <span>DEALER <b>FLYWHEEL</b></span>
+      </a>
+      <div class="view-label">OPERATING VIEW <span>/</span> <b id="modeName">SYSTEM</b></div>
+      <a class="book" href="/contact/">BOOK A CALL <span>→</span></a>
+    </header>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow">DEALER FLYWHEEL / OPERATING VIEW</p>
+        <h1>Your dealership already has the technology.</h1>
+        <p class="sub">We make it work together.</p>
+      </div>
+      <p class="frame-copy" id="frameCopy">This is the frame. The Diagnostic fills it in with your store.</p>
+    </section>
+
+    <section class="workspace" data-mode="system">
+      <aside class="rail rail-left" aria-label="Context">
+        <div class="rail-head"><span>CONTEXT</span><b id="leftTitle">DEALERSHIP FRAME</b></div>
+        <div id="leftContent"></div>
+      </aside>
+
+      <div class="stage-wrap">
+        <div class="stage-head">
+          <span id="stageKicker">MODE 01 / SYSTEM</span>
+          <span class="mode-hint" id="modeHint">STRUCTURE, NOT STORE DATA</span>
+        </div>
+        <svg id="constellation" viewBox="0 0 1000 650" role="img" aria-label="Dealership department and system relationship map"></svg>
+        <div class="stage-caption" id="stageCaption"></div>
+      </div>
+
+      <aside class="rail rail-right" aria-label="Readout">
+        <div class="rail-head"><span>READOUT</span><b id="rightTitle">WHAT THIS SHOWS</b></div>
+        <div id="rightContent"></div>
+      </aside>
+    </section>
+
+    <nav class="mode-dock" aria-label="Operating View modes">
+      <button class="mode active" data-mode="system"><i>01</i><span>SYSTEM</span></button>
+      <button class="mode" data-mode="diagnose"><i>02</i><span>DIAGNOSE</span></button>
+      <button class="mode" data-mode="decide"><i>03</i><span>DECIDE</span></button>
+      <button class="mode future" disabled><i>04</i><span>IMPLEMENT</span></button>
+      <button class="mode future" disabled><i>05</i><span>MEASURE</span></button>
+      <button class="mode future" disabled><i>06</i><span>FLYWHEEL</span></button>
+    </nav>
+
+    <footer class="prototype-note">
+      <span>PROTOTYPE / SYSTEM → DIAGNOSE → DECIDE</span>
+      <span>BDC-01 / LEAD RESPONSE &amp; OWNERSHIP</span>
+    </footer>
+  </main>
+
+<script src="/js/homepage-os2.js" defer></script>
+</body>
+</html>
