@@ -44,7 +44,7 @@ const VLINKS = USES.ven.map(d => ({ c:VEN, d:byId[d] }));
 /* the two handoffs that cross the ring */
 const CHORDS = [
   { a:byId.sal, b:byId.used, name:'Trade-in', k:.5, t0:1.7, le:.5 },
-  { a:byId.svc, b:byId.sal, name:'Equity mining', k:.62, t0:2.4, le:.28 }
+  { a:byId.svc, b:byId.sal, name:'Service to Sales', k:.62, t0:2.4, le:.28 }
 ];
 const GROUPS = [['Variable ops',0,4],['Office',5,6],['Fixed ops',7,8]]
   .map(g => ({ name:g[0], a:DEP[g[1]].ang, b:DEP[g[2]].ang, mid:(DEP[g[1]].ang + DEP[g[2]].ang) / 2 }));
@@ -94,7 +94,7 @@ const BEATS = [
 const LAST = BEATS.length - 1;
 const T_IN = .3, T_HIT = 1.2, CAP0 = 2.2, CAP1 = 3.4, VS0 = 3.4, PUL = 4.4;
 const PATH_A = [1, 2, 3, 4, 5, 6, 7, 8, 0];   // a new customer: lead to service, then recon back to Used Cars
-const PATH_B = [8, 3, 4, 5, 6, 7];            // the flywheel: Service crosses to Sales, and the loop repeats
+const PATH_B = [8, 3, 4, 5, 6, 7];            // the flywheel: Service hands an opportunity to Sales, and the loop repeats
 const SEG = 1.5;
 
 /* ---------- DOM ---------- */
@@ -172,9 +172,10 @@ function scheduleAuto(){
   clearTimeout(autoTimer);
   if (reduced || document.hidden) return;
   autoTimer = setTimeout(() => {
-    go(beat === LAST ? 0 : beat + 1);
-    scheduleAuto();
-  }, 5000);
+    if (beat >= LAST) return;
+    go(beat + 1);
+    if (beat < LAST) scheduleAuto();
+  }, 3000);
 }
 scheduleAuto();
 document.addEventListener('visibilitychange', scheduleAuto);
@@ -508,7 +509,7 @@ function frame(now){
   if (pulseA > .01) {
     const path = beat === LAST ? PATH_B : PATH_A, L = path.length;
     const adj = (a, b) => (b.idx - a.idx + DEP.length) % DEP.length === 1;
-    // a crossing (the equity mining line) gets a longer, slower beat than a step around the ring
+    // a cross-department handoff gets a longer, slower beat than a step around the ring
     const durs = path.map((id, i) => adj(DEP[id], DEP[path[(i + 1) % L]]) ? SEG : SEG * 1.8);
     let tt = pulseT % durs.reduce((a, b) => a + b, 0), k = 0;
     while (tt >= durs[k]) { tt -= durs[k]; k++; }
@@ -762,7 +763,7 @@ function frame(now){
 
   // tip: selection first; on phones the light names each department as it passes
   let info = tipFor(sel);
-  if (!info && compact && seg && seg.type === 'chord' && pulseA > .5) info = ['Equity mining', 'A service customer becomes the next sale'];
+  if (!info && compact && seg && seg.type === 'chord' && pulseA > .5) info = ['Service to Sales', 'A service opportunity reaches the Sales team'];
   if (!info && compact && ordered && lit && pulseA > .5) info = tipFor(lit);
   setTip(info);
 
