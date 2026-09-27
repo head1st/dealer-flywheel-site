@@ -4,67 +4,32 @@ title: "Dealer Flywheel"
 description: "Your dealership already has the technology. Dealer Flywheel improves how work moves across people, departments and systems — using what you already have first."
 permalink: /
 ---
-<section class="home-hero" id="homeHero">
-  <div class="home-hero-grid" aria-hidden="true"></div>
-  <div class="home-hero-inner">
-    <div class="home-hero-copy">
-      <p class="mono-kicker">DEALERSHIP OPERATIONS / IMPLEMENTATION</p>
-      <h1>Your dealership already has the technology.<br><span>We make it work together.</span></h1>
-      <p class="hero-lede">Your dealership runs across people, departments and systems. Dealer Flywheel finds where work gets stuck between them and implements practical improvements using the technology you already have.</p>
-      <div class="home-actions">
-        <a class="home-btn primary" href="/method/">See how it works <span>→</span></a>
-        <a class="home-btn secondary" href="/contact/">Book a call</a>
-      </div>
+<section class="fhero" id="fhero" aria-label="How Dealer Flywheel connects a dealership">
+  <div class="fh-glow" id="fhGlow" aria-hidden="true"></div>
+  <div class="fh-main">
+    <div class="fh-stage" id="fhStage" role="img" aria-label="Diagram of a dealership: nine departments and their systems start disconnected, pair up, line up in operational groups and connect around the Dealer Flywheel logo. A new tool knocks the operation out of alignment and is absorbed.">
+      <canvas id="fhCanvas"></canvas>
+      <div class="fh-tip" id="fhTip" hidden><b id="fhTipName"></b><span id="fhTipText"></span></div>
     </div>
-    <div class="network-shell">
-      <svg class="dealer-network" id="dealerNetwork" viewBox="0 0 760 650" role="img" aria-labelledby="networkTitle networkDesc">
-        <title id="networkTitle">Dealership operating network</title>
-        <desc id="networkDesc">Sales, Service, Finance, BDC, Marketing, Billing, Accounting, Used Cars and Parts connected through dealership systems. A gold connection shows an improved handoff.</desc>
-        <g class="network-lines">
-          <path d="M378 140 C320 155 275 185 238 224"/>
-          <path d="M238 224 C288 258 330 280 378 312"/>
-          <path d="M378 312 C448 275 490 236 525 205"/>
-          <path d="M525 205 C555 268 558 322 535 374"/>
-          <path d="M535 374 C485 408 448 435 412 484"/>
-          <path d="M412 484 C337 482 286 454 244 421"/>
-          <path d="M244 421 C198 388 180 338 188 294"/>
-          <path d="M188 294 C143 337 126 392 142 448"/>
-          <path d="M142 448 C176 500 226 525 284 534"/>
-          <path d="M284 534 C333 516 370 500 412 484"/>
-          <path d="M238 224 C206 265 196 309 188 294"/>
-          <path d="M378 312 C425 345 480 366 535 374"/>
-          <path class="gold-path" d="M244 421 C286 382 330 345 378 312"/>
-        </g>
-        <g class="system-links">
-          <path d="M330 260 L378 312"/><path d="M330 260 L238 224"/><path d="M330 260 L188 294"/>
-          <path d="M448 333 L378 312"/><path d="M448 333 L525 205"/><path d="M448 333 L535 374"/>
-          <path d="M290 395 L244 421"/><path d="M290 395 L412 484"/><path d="M290 395 L142 448"/>
-        </g>
-        <g class="systems">
-          <g transform="translate(330 260)"><rect x="-29" y="-13" width="58" height="26"/><text>CRM</text></g>
-          <g transform="translate(448 333)"><rect x="-29" y="-13" width="58" height="26"/><text>DMS</text></g>
-          <g transform="translate(290 395)"><rect x="-38" y="-13" width="76" height="26"/><text>PHONES</text></g>
-        </g>
-        <g class="dept-nodes">
-          <g class="dept" data-dept="Sales" transform="translate(378 312)"><circle r="8"/><text x="15" y="-12">01 / SALES</text></g>
-          <g class="dept" data-dept="Service" transform="translate(244 421)"><circle r="8"/><text x="-15" y="27" text-anchor="end">02 / SERVICE</text></g>
-          <g class="dept" data-dept="Finance" transform="translate(525 205)"><circle r="8"/><text x="15" y="-12">03 / FINANCE</text></g>
-          <g class="dept" data-dept="BDC" transform="translate(238 224)"><circle r="8"/><text x="-15" y="-12" text-anchor="end">04 / BDC</text></g>
-          <g class="dept" data-dept="Marketing" transform="translate(378 140)"><circle r="8"/><text x="0" y="-20" text-anchor="middle">05 / MARKETING</text></g>
-          <g class="dept" data-dept="Billing" transform="translate(535 374)"><circle r="8"/><text x="15" y="24">06 / BILLING</text></g>
-          <g class="dept" data-dept="Accounting" transform="translate(412 484)"><circle r="8"/><text x="15" y="27">07 / ACCOUNTING</text></g>
-          <g class="dept" data-dept="Used Cars" transform="translate(188 294)"><circle r="8"/><text x="-15" y="-12" text-anchor="end">08 / USED CARS</text></g>
-          <g class="dept" data-dept="Parts" transform="translate(142 448)"><circle r="8"/><text x="-15" y="27" text-anchor="end">09 / PARTS</text></g>
-        </g>
-        <circle class="signal s1" r="4"><animateMotion dur="5.4s" repeatCount="indefinite" path="M378 140 C320 155 275 185 238 224 C288 258 330 280 378 312"/></circle>
-        <circle class="signal s2" r="4"><animateMotion dur="6.6s" begin="1.4s" repeatCount="indefinite" path="M525 205 C555 268 558 322 535 374 C485 408 448 435 412 484"/></circle>
-        <circle class="signal gold-signal" r="5"><animateMotion dur="4.8s" begin=".7s" repeatCount="indefinite" path="M244 421 C286 382 330 345 378 312"/></circle>
-        <g class="network-mark" transform="translate(346 340)"><text>DEALER FLYWHEEL / CONNECTED</text></g>
-      </svg>
+    <div class="fh-copy" id="fhCopy" aria-live="polite">
+      <div class="fh-body">
+        <p class="fh-eyebrow ln" style="--i:0"><span class="idx" id="fhIdx">01</span><span id="fhTag">The store today</span></p>
+        <h1 class="fh-headline ln" style="--i:1" id="fhHl">Your dealership already has the technology.</h1>
+        <p class="fh-sub ln" style="--i:2" id="fhSub">Nine departments and a stack of systems, all running at once and rarely talking to each other.</p>
+        <div class="fh-ctas ln" style="--i:3" id="fhCtas" hidden>
+          <a class="btn" href="/diagnostic/">See the Diagnostic</a>
+        </div>
+        <p class="fh-hint ln" style="--i:3" id="fhHint"><i></i><span id="fhHintTxt">Scroll to organize the store</span></p>
+      </div>
+      <nav class="fh-steps" aria-label="Hero steps">
+        <div class="fh-bars" id="fhBars"></div>
+        <span class="fh-count" id="fhCount"><b>01</b> / 06</span>
+        <button class="fh-next" id="fhNext" type="button" aria-label="Next step"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></button>
+      </nav>
     </div>
   </div>
-  <div class="hero-scroll mono-kicker">SCROLL / FOLLOW THE FLOW <span>↓</span></div>
 </section>
+<script src="/js/hero.js" defer></script>
 
 <section class="home-section handoffs" id="handoffs">
   <div class="home-wrap">
