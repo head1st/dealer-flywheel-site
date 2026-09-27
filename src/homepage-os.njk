@@ -1,0 +1,76 @@
+---
+layout: layout.njk
+title: "Operating View"
+description: "Dealer Flywheel Operating View — architecture prototype. SYSTEM, DIAGNOSE and DECIDE as transformations of one dealership object."
+permalink: /homepage-os/
+eleventyExcludeFromCollections: true
+---
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="/css/homepage-os.css">
+
+<section class="os" id="os" data-mode="SYSTEM" aria-label="Dealer Flywheel Operating View">
+
+  <div class="os-topbar">
+    <div class="os-id">
+      <span class="os-brand">DEALER FLYWHEEL</span>
+      <span class="os-sep">/</span>
+      <span class="os-view">SYSTEM VIEW</span>
+    </div>
+    <div class="os-modeflag">MODE <b id="osMode">SYSTEM</b></div>
+  </div>
+
+  <div class="os-head">
+    <h1>Your dealership already has the technology.<br><em>We make it work together.</em></h1>
+    <a class="btn os-cta" href="/contact/">Book a Call <span aria-hidden="true">→</span></a>
+  </div>
+
+  <div class="os-grid">
+
+    <aside class="os-rail os-rail-l" id="osLeft" aria-label="Context"></aside>
+
+    <div class="os-stage" id="osStage">
+      <canvas id="osCanvas" role="img" aria-labelledby="osAlt"></canvas>
+      <p class="os-alt" id="osAlt"></p>
+      <p class="os-caption" id="osCaption"></p>
+    </div>
+
+    <aside class="os-rail os-rail-r" id="osRight" aria-label="Interpretation"></aside>
+
+  </div>
+
+  <nav class="os-dock" aria-label="Operating view modes">
+    <div class="os-dock-in" role="tablist">
+      <button type="button" role="tab" data-mode="SYSTEM"   aria-selected="true">
+        <span class="n">01</span><span class="l">SYSTEM</span>
+      </button>
+      <button type="button" role="tab" data-mode="DIAGNOSE" aria-selected="false">
+        <span class="n">02</span><span class="l">DIAGNOSE</span>
+      </button>
+      <button type="button" role="tab" data-mode="DECIDE"   aria-selected="false">
+        <span class="n">03</span><span class="l">DECIDE</span>
+      </button>
+      <button type="button" class="os-stub" disabled>
+        <span class="n">04</span><span class="l">IMPLEMENT</span>
+      </button>
+      <button type="button" class="os-stub" disabled>
+        <span class="n">05</span><span class="l">MEASURE</span>
+      </button>
+      <button type="button" class="os-stub" disabled>
+        <span class="n">06</span><span class="l">FLYWHEEL</span>
+      </button>
+    </div>
+  </nav>
+
+</section>
+
+<section class="os-exit">
+  <div class="wrap">
+    <p class="os-exit-k">PROTOTYPE / NOT PRODUCTION</p>
+    <h2>What this page is testing.</h2>
+    <p class="sub">One question: can <b>SYSTEM</b>, <b>DIAGNOSE</b> and <b>DECIDE</b> be reached as transformations of a single dealership object, rather than three separate diagrams? No node is repositioned between modes. Only the camera moves, and only emphasis changes.</p>
+    <p class="sub">Modes 04–06 are stubbed deliberately. The first three carry the argument; the rest get built once this architecture is validated.</p>
+    <p class="sub">The four causes — DUPLICATE, UNOWNED, INVISIBLE, WAITING — are flat peers, the same four the Diagnostic uses. BDC-01 and UC-02 share a cause and resolve to different interventions. So do SVC-06 and SVC-01. Cause constrains the intervention set; it does not determine it.</p>
+  </div>
+</section>
+
+<script src="/js/homepage-os.js" defer></script>

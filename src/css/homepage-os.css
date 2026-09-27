@@ -1,0 +1,297 @@
+/* Dealer Flywheel — Operating View prototype
+   Matte graphite. Bone type. 1px technical lines. Gold only where the
+   system has identified or selected something. */
+
+.os{
+  --os-ink:#0B0C0E;
+  --os-carbon:#121417;
+  --os-graphite:#1A1D21;
+  --os-steel:#2A2E34;
+  --os-bone:#F4F3F0;
+  --os-mute:#8A9199;
+  --os-dim:#5E646C;
+  --os-gold:#C9A961;
+  --os-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+
+  background:var(--os-ink);
+  color:var(--os-bone);
+  border-top:none;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  height:calc(100svh - 72px);
+  min-height:660px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* faint engineering grid, ~3% */
+.os::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(244,243,240,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(244,243,240,.028) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,#000 30%,transparent 100%);
+}
+.os > *{position:relative;z-index:1;}
+
+/* ── top bar ─────────────────────────────────────────────── */
+.os-topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px clamp(16px,3vw,32px);
+  border-bottom:1px solid var(--os-steel);
+  font:500 10.5px/1 var(--os-mono);letter-spacing:.16em;
+}
+.os-id{display:flex;align-items:center;gap:10px;}
+.os-brand{color:var(--os-bone);}
+.os-sep{color:var(--os-dim);}
+.os-view{color:var(--os-mute);}
+.os-modeflag{color:var(--os-dim);}
+.os-modeflag b{color:var(--os-gold);font-weight:500;margin-left:8px;}
+
+/* ── headline + CTA: the offer survives the chassis ───────── */
+.os-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:28px;
+  padding:clamp(18px,3vw,30px) clamp(16px,3vw,32px) clamp(16px,2vw,22px);
+  flex:none;
+}
+.os-head h1{
+  font-size:clamp(25px,3.5vw,44px);line-height:1.08;letter-spacing:-.025em;
+  font-weight:500;margin:0;max-width:20ch;
+}
+.os-head h1 em{font-style:normal;color:var(--os-gold);}
+.os-cta{white-space:nowrap;flex:none;}
+
+/* ── the frame: three zones ──────────────────────────────── */
+.os-grid{
+  flex:1;display:grid;gap:0;min-height:0;
+  grid-template-columns:clamp(210px,19vw,272px) minmax(0,1fr) clamp(240px,23vw,320px);
+  border-top:1px solid var(--os-steel);
+}
+.os-rail{
+  padding:20px clamp(14px,1.6vw,20px);
+  overflow-y:auto;
+  background:var(--os-carbon);
+  min-height:0;
+}
+.os-rail-l{border-right:1px solid var(--os-steel);}
+.os-rail-r{border-left:1px solid var(--os-steel);}
+
+.os-rail-h{
+  font:500 9.5px/1 var(--os-mono);letter-spacing:.17em;text-transform:uppercase;
+  color:var(--os-dim);margin:0 0 14px;font-weight:500;
+}
+.os-rail-h.mt{margin-top:26px;}
+
+/* ── stage ───────────────────────────────────────────────── */
+.os-stage{
+  position:relative;min-height:0;min-width:0;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 48%,rgba(201,169,97,.035),transparent 70%),
+    var(--os-ink);
+}
+.os-stage canvas{display:block;width:100%;height:100%;}
+.os-caption{
+  position:absolute;left:0;right:0;bottom:12px;margin:0;text-align:center;
+  font:400 9.5px/1.5 var(--os-mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--os-dim);padding:0 16px;
+}
+/* accessible text equivalent for the canvas, not shown visually */
+.os-alt{
+  position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;margin:0;
+}
+
+/* ── SYSTEM rail content ─────────────────────────────────── */
+.os-deps{list-style:none;margin:0;padding:0;}
+.os-deps li{
+  display:flex;gap:11px;align-items:baseline;
+  padding:7px 0;border-bottom:1px solid rgba(244,243,240,.055);
+  font-size:13.5px;color:#C8CCD1;
+}
+.os-deps li:last-child{border-bottom:none;}
+.os-deps li span{
+  font:500 9.5px var(--os-mono);letter-spacing:.1em;color:var(--os-dim);
+  font-variant-numeric:tabular-nums;
+}
+.os-note{
+  margin:14px 0 0;font:400 11px/1.6 var(--os-mono);letter-spacing:.06em;
+  color:var(--os-dim);
+}
+.os-para{margin:0 0 13px;font-size:13.5px;line-height:1.6;color:#A9AEB4;}
+p.os-framenote{
+  margin:20px 0 0;padding:15px 0 0;border-top:1px solid var(--os-steel);
+  font-size:14px;line-height:1.5;color:var(--os-bone);
+}
+p.os-framenote em{font-style:normal;color:var(--os-gold);}
+
+/* ── causes: flat peers, one active ──────────────────────── */
+.os-causes{list-style:none;margin:0;padding:0;}
+.os-causes li{
+  padding:9px 0 9px 12px;border-left:2px solid var(--os-steel);
+  margin-bottom:3px;opacity:.42;transition:opacity .28s,border-color .28s;
+}
+.os-causes li b{
+  display:block;font:500 10.5px/1 var(--os-mono);letter-spacing:.15em;
+  color:var(--os-mute);margin-bottom:4px;
+}
+.os-causes li span{display:block;font-size:11.5px;line-height:1.45;color:var(--os-dim);}
+.os-causes li.on{opacity:1;border-left-color:var(--os-gold);}
+.os-causes li.on b{color:var(--os-gold);}
+.os-causes li.on span{color:#A9AEB4;}
+
+/* ── workflow picker ─────────────────────────────────────── */
+.os-wfpick{display:flex;flex-direction:column;gap:5px;}
+.os-wfpick button{
+  appearance:none;text-align:left;cursor:pointer;
+  background:var(--os-graphite);border:1px solid var(--os-steel);
+  padding:9px 11px;color:#A9AEB4;
+  display:flex;flex-direction:column;gap:3px;
+  transition:border-color .2s,background .2s,color .2s;
+}
+.os-wfpick button b{font:500 9.5px/1 var(--os-mono);letter-spacing:.13em;color:var(--os-dim);font-weight:500;}
+.os-wfpick button span{font-size:12.5px;line-height:1.2;}
+.os-wfpick button:hover{border-color:#3C424A;color:var(--os-bone);}
+.os-wfpick button.on{border-color:var(--os-gold);color:var(--os-bone);background:#16181C;}
+.os-wfpick button.on b{color:var(--os-gold);}
+
+/* ── readouts ────────────────────────────────────────────── */
+.os-line{
+  margin:0 0 16px;font-size:14.5px;line-height:1.5;color:var(--os-bone);
+  letter-spacing:-.008em;
+}
+.os-readout{border-top:1px solid var(--os-steel);}
+.os-row{
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:9px 0;border-bottom:1px solid rgba(244,243,240,.06);
+}
+.os-row span{
+  font:400 9.5px/1.4 var(--os-mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--os-dim);flex:none;
+}
+.os-row strong{
+  font:500 11.5px/1.4 var(--os-mono);letter-spacing:.06em;
+  color:#C8CCD1;text-align:right;font-weight:500;
+}
+.os-row.gold strong{color:var(--os-gold);letter-spacing:.14em;}
+
+/* ── DECIDE: intervention list ───────────────────────────── */
+.os-ints{list-style:none;margin:0;padding:0;}
+.os-ints li{
+  padding:10px 0 10px 12px;border-left:2px solid var(--os-steel);margin-bottom:4px;
+}
+.os-ints li b{
+  display:block;font:500 10.5px/1 var(--os-mono);letter-spacing:.15em;
+  color:var(--os-dim);margin-bottom:5px;font-weight:500;
+}
+.os-ints li span{display:block;font-size:11.5px;line-height:1.45;color:var(--os-dim);}
+.os-ints li.off{opacity:.55;}
+.os-ints li.on{border-left-color:var(--os-gold);opacity:1;}
+.os-ints li.on b{color:var(--os-gold);}
+.os-ints li.on span{color:#A9AEB4;}
+
+/* ── DECIDE: the questions ───────────────────────────────── */
+.os-qs{margin-top:16px;display:flex;flex-direction:column;gap:1px;}
+.os-q{padding:10px 0 10px 11px;border-left:2px solid var(--os-steel);}
+.os-qh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+.os-qh span{font-size:12px;color:#A9AEB4;line-height:1.3;}
+.os-qh b{
+  font:500 10px/1 var(--os-mono);letter-spacing:.13em;flex:none;
+  color:var(--os-mute);font-weight:500;
+}
+.os-q p{margin:5px 0 0;font-size:11px;line-height:1.5;color:var(--os-dim);}
+.os-q.no{border-left-color:#6E5A2E;}
+.os-q.no .os-qh b{color:var(--os-gold);}
+.os-q.na .os-qh b{color:var(--os-dim);}
+
+.os-rec{
+  margin-top:18px;padding:14px;border:1px solid var(--os-gold);
+  background:rgba(201,169,97,.06);
+}
+.os-rec span{
+  display:block;font:400 9px/1 var(--os-mono);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--os-mute);margin-bottom:8px;
+}
+.os-rec strong{
+  font:500 17px/1 var(--os-mono);letter-spacing:.1em;color:var(--os-gold);font-weight:500;
+}
+
+/* ── dock ────────────────────────────────────────────────── */
+.os-dock{border-top:1px solid var(--os-steel);background:var(--os-carbon);}
+.os-dock-in{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  max-width:1140px;margin:0 auto;
+}
+.os-dock button{
+  appearance:none;background:transparent;border:0;cursor:pointer;
+  border-right:1px solid var(--os-steel);
+  padding:14px 8px 15px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  color:var(--os-dim);position:relative;
+  transition:color .2s,background .2s;
+}
+.os-dock button:last-child{border-right:0;}
+.os-dock button .n{font:500 9px/1 var(--os-mono);letter-spacing:.12em;}
+.os-dock button .l{font:500 10.5px/1 var(--os-mono);letter-spacing:.14em;}
+.os-dock button:not(:disabled):hover{color:#C8CCD1;background:rgba(244,243,240,.025);}
+.os-dock button.on{color:var(--os-bone);background:var(--os-graphite);}
+.os-dock button.on::before{
+  content:"";position:absolute;left:0;right:0;top:-1px;height:2px;background:var(--os-gold);
+}
+.os-dock button:disabled{opacity:.3;cursor:default;}
+.os-dock button.os-stub .l::after{content:"";}
+
+/* restrained invitation — appears once, after SYSTEM settles */
+@keyframes osInvite{0%,100%{opacity:.34;}50%{opacity:1;}}
+.os-dock button.invite:not(.on) .n{color:var(--os-gold);animation:osInvite 2.4s ease-in-out 3;}
+@media (prefers-reduced-motion:reduce){
+  .os-dock button.invite:not(.on) .n{animation:none;color:var(--os-gold);}
+}
+
+/* ── exit section ────────────────────────────────────────── */
+.os-exit{background:var(--bone);color:var(--ink);border-top:none;}
+.os-exit-k{
+  font:500 10.5px/1 'IBM Plex Mono',monospace;letter-spacing:.16em;
+  color:var(--gold);margin:0 0 20px;
+}
+.os-exit h2{margin-bottom:22px;}
+.os-exit .sub{max-width:68ch;margin-bottom:14px;}
+.os-exit b{font-weight:500;}
+
+/* ══ mobile: its own composition, not a squeezed desktop ══ */
+@media (max-width:900px){
+  .os{height:auto;min-height:auto;overflow:visible;}
+  .os-head{flex-direction:column;align-items:flex-start;gap:18px;}
+  .os-head h1{max-width:100%;}
+
+  .os-grid{
+    display:flex;flex-direction:column;border-top:1px solid var(--os-steel);
+  }
+  /* stage first, then interpretation, then context */
+  .os-stage{order:1;height:min(56vh,420px);min-height:280px;}
+  .os-rail-r{order:2;border-left:0;border-top:1px solid var(--os-steel);overflow:visible;}
+  .os-rail-l{order:3;border-right:0;border-top:1px solid var(--os-steel);overflow:visible;}
+
+  .os-caption{bottom:8px;font-size:9px;}
+
+  /* dock pinned to the bottom, thumb-reachable, scrolls horizontally */
+  .os-dock{
+    position:sticky;bottom:0;z-index:20;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    box-shadow:0 -12px 28px rgba(11,12,14,.6);
+  }
+  .os-dock-in{
+    display:flex;overflow-x:auto;scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .os-dock-in::-webkit-scrollbar{display:none;}
+  .os-dock button{flex:0 0 auto;min-width:104px;padding:11px 14px 12px;}
+}
+
+@media (max-width:520px){
+  .os-head h1{font-size:23px;}
+  .os-topbar{font-size:9.5px;letter-spacing:.13em;}
+  .os-view,.os-sep,.os-brand{display:none;}
+}
