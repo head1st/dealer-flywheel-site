@@ -1,0 +1,88 @@
+---
+layout: layout.njk
+title: "Transition Lab"
+description: "Dealer Flywheel hero-to-diagnostic transition prototype."
+permalink: /transition-lab/
+eleventyExcludeFromCollections: true
+---
+<meta name="robots" content="noindex,nofollow">
+
+<section class="fhero transition-lab-hero" id="fhero" aria-label="How Dealer Flywheel connects a dealership">
+  <div class="fh-glow" id="fhGlow" aria-hidden="true"></div>
+  <div class="fh-main">
+    <div class="fh-stage" id="fhStage" role="img" aria-label="Diagram of dealership departments and systems resolving into one connected operating system.">
+      <canvas id="fhCanvas"></canvas>
+      <div class="fh-tip" id="fhTip" hidden><b id="fhTipName"></b><span id="fhTipText"></span></div>
+    </div>
+    <div class="fh-copy" id="fhCopy" aria-live="polite">
+      <div class="fh-body">
+        <p class="fh-eyebrow ln" style="--i:0"><span class="idx" id="fhIdx">01</span><span id="fhTag">The store today</span></p>
+        <h1 class="fh-headline ln" style="--i:1" id="fhHl">Your dealership already has the technology.</h1>
+        <p class="fh-sub ln" style="--i:2" id="fhSub">Nine departments and a stack of systems, all running at once and rarely talking to each other.</p>
+        <div class="fh-ctas ln" style="--i:3" id="fhCtas" hidden></div>
+        <p class="fh-hint ln" style="--i:3" id="fhHint"><i></i><span id="fhHintTxt"></span></p>
+      </div>
+      <nav class="fh-steps" aria-label="Hero steps">
+        <div class="fh-bars" id="fhBars"></div>
+        <span class="fh-count" id="fhCount"><b>01</b> / 06</span>
+        <button class="fh-next" id="fhNext" type="button" aria-label="Next step"></button>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<section class="mode-shift" id="modeShift" aria-label="Transition from system view to diagnostic view">
+  <div class="mode-shift-sticky">
+    <div class="mode-grid" aria-hidden="true"></div>
+    <div class="mode-topbar">
+      <div><span class="mode-dot"></span> DEALER FLYWHEEL OS</div>
+      <div class="mode-state">SYSTEM / CONNECTED</div>
+    </div>
+
+    <div class="mode-focus" aria-hidden="true">
+      <div class="focus-ring r1"></div>
+      <div class="focus-ring r2"></div>
+      <div class="focus-ring r3"></div>
+      <div class="focus-core"></div>
+      <div class="focus-label l1">MARKETING</div>
+      <div class="focus-label l2">BDC</div>
+      <div class="focus-label l3">SALES</div>
+      <div class="focus-line a"></div>
+      <div class="focus-line b"></div>
+    </div>
+
+    <div class="mode-scan" aria-hidden="true"></div>
+
+    <div class="diagnose-panel">
+      <div class="diag-head">
+        <div>
+          <span>MODE 02</span>
+          <strong>DIAGNOSE</strong>
+        </div>
+        <div class="diag-status"><i></i> TRACE ACTIVE</div>
+      </div>
+
+      <div class="diag-workflow">
+        <div class="trace-label">WORKFLOW TRACE / LEAD RESPONSE</div>
+        <div class="trace">
+          <span>MARKETING</span><i></i><span>BDC</span><i class="fault"></i><span>SALES</span>
+        </div>
+        <div class="trace-time">01:13:42</div>
+      </div>
+
+      <div class="diag-readout">
+        <div><span>STATUS</span><strong>HANDOFF STALLED</strong></div>
+        <div><span>OWNER</span><strong>UNASSIGNED</strong></div>
+        <div><span>NEXT ACTION</span><strong>REQUIRES REVIEW</strong></div>
+      </div>
+
+      <div class="diag-foot">
+        <span>SYSTEM → DIAGNOSE</span>
+        <span>Evidence before intervention.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/js/hero.js" defer></script>
+<script src="/js/transition-lab.js" defer></script>
