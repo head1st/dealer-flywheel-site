@@ -1,6 +1,6 @@
 # Dealer Flywheel — website
 
-A static, multi-page marketing site built with [Eleventy](https://www.11ty.dev/), styled from the original one-page mockup. Pages: Home, Method, What We Build, Pricing, Security, Contact.
+A static, multi-page marketing site built with [Eleventy](https://www.11ty.dev/), styled from the original one-page mockup. Pages: Home, Method, Diagnostic, What We Build, Demo, Pricing, Security, Contact, Equity Mining. The Demo page links out to the separately deployed Equity Mining app (repo head1st/equity-mining-demo); its URL lives in `src/_data/site.json`.
 
 ## Local development
 

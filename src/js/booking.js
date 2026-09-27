@@ -119,6 +119,25 @@
     setStatus("");
   });
 
+  // Department is optional: clicking the selected chip again clears it.
+  Array.prototype.forEach.call(form.querySelectorAll('input[name="department"]'), function (radio) {
+    var label = form.querySelector('label[for="' + radio.id + '"]');
+    var wasChecked = false;
+    label.addEventListener("mousedown", function () { wasChecked = radio.checked; });
+    label.addEventListener("click", function (e) {
+      if (wasChecked) {
+        e.preventDefault();
+        radio.checked = false;
+        wasChecked = false;
+      }
+    });
+  });
+
+  function selectedDepartment() {
+    var checked = form.querySelector('input[name="department"]:checked');
+    return checked ? checked.value : "";
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var submitBtn = form.querySelector('button[type="submit"]');
@@ -131,6 +150,7 @@
       name: form.elements.name.value,
       email: form.elements.email.value,
       phone: form.elements.phone.value,
+      department: selectedDepartment(),
       notes: form.elements.notes.value,
       hp_x9: form.elements.hp_x9.value, // spam trap, expected empty
     };

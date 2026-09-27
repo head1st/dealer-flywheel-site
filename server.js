@@ -10,6 +10,7 @@ const crypto = require("crypto");
 const { decodeVin, VinDecodeError } = require("./lib/vinDecode");
 const { buildAdf, AdfValidationError } = require("./lib/adf");
 const { createTtlCache } = require("./lib/ttlCache");
+const { cleanDepartment } = require("./lib/departments");
 const { rateLimit } = require("express-rate-limit");
 
 const app = express();
@@ -107,6 +108,7 @@ app.get("/api/availability", availabilityLimiter, async (req, res) => {
 
 app.post("/api/book", formLimiter, async (req, res) => {
   const { date, time, name, email, phone, notes, hp_x9 } = req.body || {};
+  const department = cleanDepartment((req.body || {}).department);
 
   // Spam trap: the hidden hp_x9 field is invisible to people and named so
   // browser autofill ignores it. If it's filled anyway, don't book the
@@ -116,7 +118,7 @@ app.post("/api/book", formLimiter, async (req, res) => {
     console.warn("booking spam trap filled:", { name, email, date, time });
     res.json({ success: true });
     emailer
-      .sendSuspectBooking({ name, email, phone, notes, date, time, trap: hp_x9 })
+      .sendSuspectBooking({ name, email, phone, department, notes, date, time, trap: hp_x9 })
       .catch((e) => console.error("suspect-booking email failed:", e));
     return;
   }
@@ -172,6 +174,7 @@ app.post("/api/book", formLimiter, async (req, res) => {
       name: name.trim(),
       email: email.trim(),
       phone: typeof phone === "string" ? phone.trim() : "",
+      department,
       notes: typeof notes === "string" ? notes.trim() : "",
     });
 
@@ -187,6 +190,9 @@ app.post("/api/book", formLimiter, async (req, res) => {
         name: name.trim(),
         dateLabel: start.toFormat("cccc, LLLL d"),
         timeLabel: start.toFormat("h:mm a"),
+        phone: typeof phone === "string" ? phone.trim().slice(0, 100) : "",
+        department,
+        notes: typeof notes === "string" ? notes.trim().slice(0, 4000) : "",
       })
       .catch((emailErr) => {
         console.error("confirmation email failed:", emailErr);

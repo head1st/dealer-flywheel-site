@@ -55,14 +55,14 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 @media(max-width:940px){.navlinks{display:none;}}
 @media(min-width:941px) and (max-width:1120px){
   .navin{gap:18px;}
-  .navlinks{gap:16px;font-size:13.5px;}
+  .navlinks{gap:14px;font-size:13px;}
   .brand .wm{font-size:13.5px;letter-spacing:.14em;}
   .navcta{padding:10px 14px;font-size:13.5px;}
-  .navcta .long{display:none;}
-  .navcta .short{display:inline;}
+  header .navcta .long{display:none;}
+  header .navcta .short{display:inline;}
 }
 .brand svg{flex:none;}
-.navcta{white-space:nowrap;}
+.navcta{white-space:nowrap;flex:none;}
 .navcta .short{display:none;}
 @media(max-width:520px){
   .navin{padding:0 16px;gap:12px;}
@@ -418,3 +418,19 @@ footer .brand .wm{color:#7E848C;}
 .plainlist li{padding:14px 0 14px 22px;border-bottom:1px solid var(--hair);position:relative;font-size:16px;line-height:1.5;}
 .plainlist li::before{content:"";position:absolute;left:0;top:25px;width:10px;height:1px;background:var(--gold);}
 .pagehead .btnrow{margin-top:28px;}
+/* ---------- demo ---------- */
+.demo-note{margin:14px 0 0;font-size:13.5px;color:#8B9199;}
+/* ---------- diagnostic: we come prepared ---------- */
+.prep-tags{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none;}
+.prep-tags li{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--hair);border-left:3px solid var(--gold);padding:9px 14px;}
+/* ---------- contact: department chips ---------- */
+.dept-chips{border:none;margin:0;padding:0;min-width:0;}
+.dept-chips legend{padding:0;}
+.dept-chips .chips{display:flex;flex-wrap:wrap;gap:8px;}
+.dept-chips input{position:absolute;opacity:0;width:1px;height:1px;}
+.dept-chips label{display:inline-block;font-size:14px;padding:8px 13px;border:1px solid var(--hair);cursor:pointer;color:var(--ink);background:var(--paper);user-select:none;}
+.dept-chips label:hover{border-color:var(--graph);}
+.dept-chips input:checked + label{background:var(--ink);color:var(--bone);border-color:var(--ink);}
+.dept-chips input:focus-visible + label{outline:2px solid var(--gold);outline-offset:2px;}
+.dept-chips label.unsure{color:var(--graph);}
+.dept-chips input:checked + label.unsure{color:var(--bone);}
