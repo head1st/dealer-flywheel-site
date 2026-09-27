@@ -93,7 +93,7 @@ const BEATS = [
 const LAST = BEATS.length - 1;
 const T_IN = .3, T_HIT = 1.2, CAP0 = 2.2, CAP1 = 3.4, VS0 = 3.4, PUL = 4.4;
 const PATH_A = [1, 2, 3, 4, 5, 6, 7, 8, 0];   // a new customer: lead to service, then recon back to Used Cars
-const PATH_B = [8, 3, 4, 5, 6, 7];            // the flywheel: the loop repeats
+const PATH_B = [3, 4, 5, 6, 7, 8, 0, 1, 2];   // final frame: continuous adjacent loop, no Service-to-Sales chord
 const SEG = 1.5;
 
 /* ---------- DOM ---------- */
