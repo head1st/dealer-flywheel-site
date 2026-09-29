@@ -173,13 +173,10 @@ permalink: /sample-diagnostic/
     </div>
     <span class="sd-tag">Synthetic sample</span>
     <div class="btnrow" style="margin-top:18px;">
-      <a class="btn ink" id="sd-view" href="/assets/dealer-flywheel-synthetic-sample-diagnostic.pdf" target="_blank" rel="noopener" aria-controls="sd-viewer">View the full report</a>
+      <a class="btn ink" href="/assets/dealer-flywheel-synthetic-sample-diagnostic.pdf" target="_blank" rel="noopener">View the full report</a>
       <a class="btn ghost sd-dl" href="/assets/dealer-flywheel-synthetic-sample-diagnostic.pdf" download>Download the PDF</a>
     </div>
     <p class="sd-note sd-note-light">Synthetic example. Fictional store. Invented data. Not a benchmark.</p>
-    <div class="sd-viewer" id="sd-viewer" hidden>
-      <iframe title="Synthetic sample Diagnostic report (PDF)" loading="lazy" data-src="/assets/dealer-flywheel-synthetic-sample-diagnostic.pdf#view=FitH"></iframe>
-    </div>
   </div>
 </section>
 
@@ -198,21 +195,3 @@ permalink: /sample-diagnostic/
   </div>
 </section>
 
-<script>
-(() => {
-  const btn = document.getElementById('sd-view');
-  const box = document.getElementById('sd-viewer');
-  if (!btn || !box) return;
-  const desktop = window.matchMedia('(min-width: 821px)');
-  btn.addEventListener('click', e => {
-    if (!desktop.matches) return; // phones: the link opens the file in a new tab
-    e.preventDefault();
-    const frame = box.querySelector('iframe');
-    if (!frame.getAttribute('src')) frame.setAttribute('src', frame.dataset.src);
-    const open = box.hidden;
-    box.hidden = !open;
-    btn.textContent = open ? 'Hide the full report' : 'View the full report';
-    if (open) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-})();
-</script>
