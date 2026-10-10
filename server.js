@@ -11,6 +11,7 @@ const { decodeVin, VinDecodeError } = require("./lib/vinDecode");
 const { buildAdf, AdfValidationError } = require("./lib/adf");
 const { createTtlCache } = require("./lib/ttlCache");
 const { cleanDepartment } = require("./lib/departments");
+const prediag = require("./lib/prediag");
 const { rateLimit } = require("express-rate-limit");
 
 const app = express();
@@ -275,6 +276,53 @@ app.post("/api/discovery", formLimiter, async (req, res) => {
     console.error("discovery submission payload:", JSON.stringify(answers));
     res.status(502).json({
       error: "Your answers didn't send — please try again, or email hello@dealerflywheel.com.",
+    });
+  }
+});
+
+// Pre-Diagnostic Questionnaire (src/pre-diagnostic.njk). The page sends every
+// answered question as { section, label, value }; see lib/prediag.js.
+app.post("/api/pre-diagnostic", formLimiter, async (req, res) => {
+  const body = req.body || {};
+
+  // Spam trap (see /api/book): a filled trap is processed normally and flagged
+  // in the subject, so a real submission is never silently lost.
+  const trapFilled = Boolean(prediag.cleanStr(body.hp_x9, 200));
+  if (trapFilled) console.warn("pre-diagnostic spam trap filled:", prediag.cleanStr(body.store, 200));
+
+  const store = prediag.cleanStr(body.store, 200);
+  const respondentName = prediag.cleanStr(body.respondentName, 200);
+  const role = prediag.cleanStr(body.role, 200);
+  const contact = prediag.cleanStr(body.contact, 254);
+
+  if (!store) return res.status(400).json({ error: "Store name is required." });
+  if (!respondentName) return res.status(400).json({ error: "Your name is required." });
+  if (!role) return res.status(400).json({ error: "Your role is required." });
+
+  const message = {
+    store,
+    respondentName,
+    role,
+    contact,
+    answers: prediag.cleanAnswers(body.answers),
+    skipped: prediag.cleanSkipped(body.skipped),
+    trapFilled,
+  };
+
+  try {
+    await emailer.sendPreDiagnosticSubmission(
+      prediag.formatEmail(message),
+      EMAIL_RE.test(contact) ? contact : undefined
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("pre-diagnostic email failed:", err);
+    // Real answers shouldn't vanish because email delivery hiccuped: log the
+    // payload server-side so it's recoverable. (The browser also keeps its
+    // saved copy, so the respondent can simply retry.)
+    console.error("pre-diagnostic payload:", JSON.stringify(message));
+    res.status(502).json({
+      error: "Your answers didn't send — please try again in a minute, or email hello@dealerflywheel.com.",
     });
   }
 });

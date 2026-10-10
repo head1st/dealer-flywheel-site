@@ -1,0 +1,68 @@
+/* Pre-Diagnostic Questionnaire. Builds on the shared form styles in style.css
+   (booking-input, booking-label, disc-*, btn). Phone first: big tap targets,
+   16px inputs (iOS won't zoom), a sticky Back/Next bar. */
+
+.pd-wrap{margin-top:clamp(24px,4vw,46px);background:var(--paper);border:1px solid var(--hair);padding:clamp(18px,3vw,28px);max-width:820px;}
+
+.pd-progress{margin:0 0 26px;}
+.pd-progress-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-size:13px;color:var(--graph);letter-spacing:.03em;margin-bottom:9px;}
+.pd-progress-top b{color:var(--ink);font-weight:500;}
+.pd-bar{height:4px;background:var(--bone);border:1px solid var(--hair);}
+.pd-bar > i{display:block;height:100%;background:var(--gold);width:0;transition:width .25s ease;}
+@media (prefers-reduced-motion:reduce){.pd-bar > i{transition:none;}}
+
+.pd-title{font-size:clamp(22px,3.4vw,30px);letter-spacing:-.02em;margin:0 0 6px;}
+.pd-lede{color:var(--graph);font-size:15px;margin:0 0 6px;max-width:60ch;}
+
+.pd-field{border:0;margin:0;padding:0;min-width:0;margin-top:22px;}
+.pd-field > .booking-label,.pd-field > legend.booking-label{margin:0 0 8px;padding:0;font-size:14px;color:var(--ink);letter-spacing:0;line-height:1.4;}
+.pd-field .booking-optional{font-size:13px;}
+.pd-wrap .booking-input{font-size:16px;min-height:46px;border-radius:0;}
+.pd-wrap textarea.booking-input{min-height:96px;}
+.pd-wrap select.booking-input{appearance:none;-webkit-appearance:none;padding-right:38px;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--graph) 50%),linear-gradient(135deg,var(--graph) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;}
+.pd-other{margin-top:8px;}
+.pd-seen{display:block;font-size:12.5px;color:var(--gold);margin-top:6px;}
+
+.pd-group{margin-top:30px;padding-top:6px;border-top:1px solid var(--hair);}
+.pd-group-title{font-size:13px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin:18px 0 0;}
+.pd-group-note{font-size:14px;color:var(--graph);margin:6px 0 0;max-width:60ch;}
+.pd-group .pd-field{margin-top:16px;}
+
+.pd-vendor{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:560px){.pd-vendor{grid-template-columns:1fr;}}
+.pd-vendor-sub{font-size:12.5px;color:var(--graph);margin:0 0 4px;}
+
+.pd-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.pd-chip{position:relative;display:inline-flex;}
+.pd-chip input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer;}
+.pd-chip span{display:inline-flex;align-items:center;min-height:44px;padding:9px 15px;font-size:15px;line-height:1.25;
+  border:1px solid var(--hair);background:var(--paper);color:var(--ink);cursor:pointer;user-select:none;-webkit-user-select:none;}
+.pd-chip input:checked + span{background:var(--ink);color:var(--bone);border-color:var(--ink);}
+.pd-chip input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px;}
+.pd-chip input:disabled + span{opacity:.4;cursor:not-allowed;}
+.pd-chip:hover input:not(:disabled):not(:checked) + span{border-color:var(--graph);}
+.pd-chip-hint{font-size:12.5px;color:var(--graph);margin:7px 0 0;}
+
+.pd-skip{margin-top:22px;border:1px solid var(--hair);background:var(--bone);padding:16px 18px;}
+.pd-skip label.pd-check{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-size:15px;line-height:1.4;}
+.pd-skip input[type=checkbox]{width:22px;height:22px;margin:1px 0 0;flex:none;accent-color:var(--ink);}
+.pd-skip .pd-field{margin-top:14px;}
+.pd-skipped-msg{font-size:14.5px;color:var(--graph);margin:16px 0 0;}
+
+.pd-nav{position:sticky;bottom:0;z-index:5;display:flex;gap:10px;justify-content:space-between;align-items:center;
+  margin:30px calc(-1 * clamp(18px,3vw,28px)) calc(-1 * clamp(18px,3vw,28px));
+  padding:14px clamp(18px,3vw,28px) calc(14px + env(safe-area-inset-bottom,0px));
+  background:var(--paper);border-top:1px solid var(--hair);}
+.pd-nav .btn{min-height:48px;min-width:112px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;}
+.pd-nav .btn.back{background:transparent;color:var(--ink);border-color:var(--hair);}
+.pd-nav .btn.back:hover{border-color:var(--graph);}
+.pd-nav .btn[disabled]{opacity:.55;cursor:wait;}
+.pd-nav .spacer{flex:1;}
+.pd-status{font-size:14px;color:var(--graph);margin:14px 0 0;min-height:1.4em;}
+.pd-status.err{color:#B3462C;}
+.pd-count{font-size:14.5px;color:var(--graph);margin:22px 0 0;}
+
+.pd-done h3{font-size:clamp(24px,4vw,34px);margin:0 0 10px;letter-spacing:-.02em;}
+.pd-done p{color:var(--graph);max-width:56ch;}

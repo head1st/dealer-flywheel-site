@@ -6,6 +6,9 @@
 <meta name="color-scheme" content="light">
 <title>{{ title }} — Dealer Flywheel</title>
 <meta name="description" content="{{ description }}">
+{%- if noindex %}
+<meta name="robots" content="noindex,nofollow">
+{%- endif %}
 <link rel="canonical" href="https://dealerflywheel.com{{ page.url }}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Dealer Flywheel">
